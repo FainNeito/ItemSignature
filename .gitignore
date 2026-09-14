@@ -1,0 +1,9 @@
+target/
+.tools/
+.reference/
+.idea/
+*.iml
+.m2/
+logs/
+build.log
+.claude/
