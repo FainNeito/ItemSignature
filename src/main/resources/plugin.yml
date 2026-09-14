@@ -1,0 +1,38 @@
+name: ItemSignature
+version: '${project.version}'
+main: net.enthusia.itemsignature.infrastructure.ItemSignaturePlugin
+api-version: '1.21.11'
+description: Permanent signatures and live item statistics.
+authors: [Enthusia]
+softdepend: [DiaryKeeper, EnthusiaLoreItems, Nexo]
+commands:
+  sign:
+    description: Permanently sign your held item.
+    usage: '/sign [--color <red or #RRGGBB>] [message] | confirm | cancel'
+  track:
+    description: Attach one permanent stat tracker to your held item.
+    usage: /track <player_kills|mob_kills|blocks_broken>
+  itemsignature:
+    description: Show help or reload configuration.
+    usage: /itemsignature [reload]
+permissions:
+  itemsignature.sign:
+    default: true
+  itemsignature.color:
+    default: false
+  itemsignature.hex:
+    default: false
+    children:
+      itemsignature.color: true
+  itemsignature.quote:
+    default: false
+  itemsignature.glyph:
+    default: false
+  itemsignature.track.player_kills:
+    default: false
+  itemsignature.track.mob_kills:
+    default: false
+  itemsignature.track.blocks_broken:
+    default: false
+  itemsignature.reload:
+    default: op
