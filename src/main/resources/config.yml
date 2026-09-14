@@ -1,0 +1,62 @@
+# ItemSignature - Java 21 / Paper and Leaf 1.21.11
+settings:
+  prefix: '<dark_gray>[<gold>Enthusia<dark_gray>] <reset>'
+  signing:
+    max-text-length: 160
+    blacklisted-words: [Admin, Founder]
+    default-name-color: '<gray>'
+    date-format: 'yyyy-MM-dd'
+    timezone: 'UTC'
+  tracking:
+    count-creative: false
+  nexo-integration:
+    enabled: true
+    use-discord-style-tags: true
+
+# MiniMessage colors and safe decorations; placeholder values stay opaque.
+formats:
+  signature:
+    basic: '<dark_gray>- <gray>Signed by %player%'
+    custom: '<dark_gray>- %nexo_verified% <gray>Signed by %player%'
+    quote: '<dark_gray><italic>"%text%"'
+    date-stamp: '<dark_gray>(<gray>%date%<dark_gray>)'
+  tracking:
+    stat-line: '%nexo_stat_icon% <red>%stat_name%: <white>%stat_value%'
+    stat-names:
+      player_kills:
+        name: 'Player Kills'
+        icon: '%nexo_skull%'
+        fallback-icon: '⚔'
+      mob_kills:
+        name: 'Mob Kills'
+        icon: '%nexo_zombie_head%'
+        fallback-icon: '☠'
+      blocks_broken:
+        name: 'Blocks Mined'
+        icon: '%nexo_pickaxe%'
+        fallback-icon: '⛏'
+
+messages:
+  no-permission: '<red>You do not have permission to do that.'
+  players-only: '<red>Only players can use this command.'
+  invalid-item: '<red>Hold an item in your main hand first.'
+  stacked-item: '<red>Hold a single item, not a stack.'
+  protected-item: '<red>Diary lore cannot be changed, signed, or tracked.'
+  text-blacklisted: '<red>Your text contains a restricted word.'
+  invalid-text: '<red>Use a single nonempty line of up to %max% characters. Control characters and arbitrary tags are not allowed.'
+  glyph-unavailable: '<red>That glyph is unavailable or you lack its Nexo permission.'
+  signed-success: '<green>Item signed!'
+  already-signed: '<red>This item is already signed by %player%.'
+  tracker-applied: '<green>Tracker %stat_name% applied!'
+  tracker-already-exists: '<red>This item already has a tracker.'
+  invalid-stat: '<red>Choose player_kills, mob_kills, or blocks_broken.'
+  data-error: '<red>This item has unsupported or damaged ItemSignature data. Ask an administrator.'
+  reloaded: '<green>ItemSignature configuration reloaded.'
+  reload-failed: '<red>Invalid configuration; previous settings remain active. Check the server log.'
+  sign-usage: '<yellow>/sign [--color red or #RRGGBB] [message] | confirm | cancel'
+  help: '<yellow>/sign [message], /sign confirm, /sign cancel, /track <player_kills|mob_kills|blocks_broken>'
+
+  sign-warning: '<yellow>Signing is a one-time action and cannot be changed. Review your signature below, then use /sign confirm within 30 seconds, or /sign cancel.'
+  sign-no-pending: '<red>No pending signature, or it expired. Use /sign [message] first.'
+  sign-item-changed: '<red>Your held item changed. Use /sign [message] again to review it.'
+  sign-cancelled: '<yellow>Signing cancelled.'
