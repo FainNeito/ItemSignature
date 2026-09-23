@@ -72,3 +72,10 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
   - New test import `net.enthusia.itemsignature.infrastructure.LegacyConfigMigration` names the proposed local adapter; `org.mockbukkit.mockbukkit.MockBukkit` and `org.junit.jupiter.api` are already used in the existing test suite.
   Validation: focused test was red because the migration adapter did not exist; implementation made all four branding/migration tests green. Java 25 `./mvnw -o -q clean verify` passed 51 tests with zero failures/errors; `node tools/spear/ears.mjs docs/requirements.md` and LayerRulesTest passed. The installable shaded JAR is `target/EnthusiaSignature-1.1.1.jar`. Live Paper/Leaf and old-config startup remain in TESTING.md.
 
+- [x] **TDD-006** - Harden legacy-config migration against ambiguous filesystem state and partial copies.
+  Tag: TDD
+  References: REQ-020, REQ-021; docs/implementation.md#persistence-compatibility
+  Acceptance: Confirmed missing legacy config permits defaults; inaccessible/invalid legacy paths fail closed; failed copying never publishes a partial destination; first startup loads the existing settings. Existing current config remains authoritative.
+  Evidence: CodeRabbit review on FainNeito/ItemSignature#1 identified ambiguous `Files.exists`, non-atomic `Files.copy`, and missing startup integration coverage. MockBukkit `PluginManagerMock.createTemporaryDirectory` and `getParentTemporaryDirectory` were verified in the local 4.110.0 JAR via javap.
+  Validation: The invalid-parent regression failed against the original adapter, then all six focused tests passed after hardening. Java 25 offline clean verify passed 53 tests with zero failures; EARS and architecture gates passed. Configuration is staged to a same-directory temporary file and atomically moved into place; the temporary file is removed on failed publication. Live server migration and crash simulation remain in TESTING.md.
+

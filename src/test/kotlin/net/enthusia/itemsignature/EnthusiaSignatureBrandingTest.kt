@@ -63,4 +63,29 @@ class EnthusiaSignatureBrandingTest {
         }
         assertTrue(Files.exists(legacy))
     }
+
+    @Test fun `uninspectable legacy path is not mistaken for a missing config`() {
+        val parentFile = temp.resolve("not-a-directory")
+        Files.writeString(parentFile, "blocked")
+        val current = temp.resolve("EnthusiaSignature/config.yml")
+        assertThrows(IOException::class.java) {
+            LegacyConfigMigration.copyIfMissing(parentFile.resolve("config.yml"), current)
+        }
+        assertFalse(Files.exists(current))
+    }
+
+    @Test fun `plugin startup loads the legacy settings before generating defaults`() {
+        val server = MockBukkit.mock()
+        try {
+            val pluginRoot = server.pluginManager.parentTemporaryDirectory.toPath()
+            val legacy = pluginRoot.resolve("ItemSignature/config.yml")
+            Files.createDirectories(legacy.parent)
+            Files.writeString(legacy, "settings:\n  signing:\n    max-text-length: 73\n")
+            val plugin = MockBukkit.load(ItemSignaturePlugin::class.java)
+            assertEquals(73, plugin.service.settings.maxLength)
+            assertEquals(Files.readString(legacy), Files.readString(plugin.dataFolder.toPath().resolve("config.yml")))
+        } finally {
+            MockBukkit.unmock()
+        }
+    }
 }

@@ -26,3 +26,5 @@ Real-client Nexo pack rendering, live plugin coexistence and server-restart acce
 
 | REQ-020 | EnthusiaSignatureBrandingTest: public plugin name, both admin commands, one-time legacy config copy, no overwrite, missing-old no-op and copy-failure propagation. Existing ItemSignatureTest covers legacy `itemsignature` permissions and PDC. Real server folder migration remains in TESTING.md. |
 
+| REQ-021 | EnthusiaSignatureBrandingTest: invalid legacy parent fails rather than looking absent; first plugin startup loads legacy max-length settings; atomic same-directory staging prevents partial destination publication. Real filesystem crash testing remains in TESTING.md. |
+

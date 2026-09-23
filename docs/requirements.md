@@ -61,3 +61,6 @@ WHEN permitted player text is rendered THE SYSTEM SHALL support MiniMessage name
 
 ### REQ-020 - EnthusiaSignature compatible rebrand
 WHEN an ItemSignature installation is replaced by EnthusiaSignature THE SYSTEM SHALL use EnthusiaSignature as its public plugin and artifact name, preserve existing `itemsignature` PDC and permissions, retain the legacy command, and copy an existing legacy configuration into the new plugin data folder only when the new configuration is absent, without modifying the legacy copy.
+
+### REQ-021 - Fail-closed legacy configuration migration
+WHEN legacy configuration discovery or copying fails THE SYSTEM SHALL refuse startup without creating or loading a partial replacement; WHEN legacy configuration is confirmed absent THE SYSTEM MAY use the packaged defaults; WHEN a new configuration already exists THE SYSTEM SHALL leave it authoritative.
