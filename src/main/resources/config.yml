@@ -1,4 +1,4 @@
-# ItemSignature - Java 21 / Paper and Leaf 1.21.11
+# EnthusiaSignature - Java 21 / Paper and Leaf 1.21.11
 settings:
   prefix: '<dark_gray>[<gold>Enthusia<dark_gray>] <reset>'
   signing:
@@ -50,8 +50,8 @@ messages:
   tracker-applied: '<green>Tracker %stat_name% applied!'
   tracker-already-exists: '<red>This item already has a tracker.'
   invalid-stat: '<red>Choose player_kills, mob_kills, or blocks_broken.'
-  data-error: '<red>This item has unsupported or damaged ItemSignature data. Ask an administrator.'
-  reloaded: '<green>ItemSignature configuration reloaded.'
+  data-error: '<red>This item has unsupported or damaged EnthusiaSignature data. Ask an administrator.'
+  reloaded: '<green>EnthusiaSignature configuration reloaded.'
   reload-failed: '<red>Invalid configuration; previous settings remain active. Check the server log.'
   sign-usage: '<yellow>/sign [--color red or #RRGGBB] [message] | confirm | cancel'
   help: '<yellow>/sign [message], /sign confirm, /sign cancel, /track <player_kills|mob_kills|blocks_broken>'

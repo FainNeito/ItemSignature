@@ -58,3 +58,41 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
 
   Final validation: full Maven clean verify passed 47 tests (zero failures/errors/skips), packaged ItemSignature-1.1.0.jar, EARS validator and import evidence gate passed; architecture checks passed. Live server/client acceptance remains in TESTING.md.
 
+- [x] **TDD-005** - Rebrand as EnthusiaSignature without losing existing configuration or item data.
+  Tag: TDD
+  References: REQ-006, REQ-007, REQ-011, REQ-012, REQ-020; docs/implementation.md#persistence-compatibility
+  Acceptance: Plugin metadata and JAR use EnthusiaSignature; old `itemsignature` PDC keys and permission nodes remain valid; `/itemsignature reload` remains available alongside `/enthusiasignature reload`; an old configuration is copied only if the new one is missing and never overwritten or removed. Migration failures must prevent a silent default reset. Automated tests cover migration and command compatibility.
+  Evidence:
+  - User confirmed "EnthusiaSignature as the official name" on 2026-09-23.
+  - `src/main/resources/plugin.yml` currently names ItemSignature and declares the legacy command and permissions.
+  - `pom.xml` and `.github/workflows/build.yml` define the artifact and CI path.
+  - `src/main/kotlin/net/enthusia/itemsignature/infrastructure/ItemSignaturePlugin.kt` calls `saveDefaultConfig()` before loading settings; changing plugin.yml name changes its Bukkit data-folder path.
+  - `src/main/kotlin/net/enthusia/itemsignature/infrastructure/ItemData.kt` stores keys under `itemsignature` and must remain unchanged.
+  - Existing `src/test/kotlin/net/enthusia/itemsignature/ItemSignatureTest.kt` uses MockBukkit and verifies configuration reload behavior.
+  - New test import `net.enthusia.itemsignature.infrastructure.LegacyConfigMigration` names the proposed local adapter; `org.mockbukkit.mockbukkit.MockBukkit` and `org.junit.jupiter.api` are already used in the existing test suite.
+  Validation: focused test was red because the migration adapter did not exist; implementation made all four branding/migration tests green. Java 25 `./mvnw -o -q clean verify` passed 51 tests with zero failures/errors; `node tools/spear/ears.mjs docs/requirements.md` and LayerRulesTest passed. The installable shaded JAR is `target/EnthusiaSignature-1.1.1.jar`. Live Paper/Leaf and old-config startup remain in TESTING.md.
+
+- [x] **TDD-006** - Harden legacy-config migration against ambiguous filesystem state and partial copies.
+  Tag: TDD
+  References: REQ-020, REQ-021; docs/implementation.md#persistence-compatibility
+  Acceptance: Confirmed missing legacy config permits defaults; inaccessible/invalid legacy paths fail closed; failed copying never publishes a partial destination; first startup loads the existing settings. Existing current config remains authoritative.
+  Evidence: CodeRabbit review on FainNeito/ItemSignature#1 identified ambiguous `Files.exists`, non-atomic `Files.copy`, and missing startup integration coverage. MockBukkit `PluginManagerMock.createTemporaryDirectory` and `getParentTemporaryDirectory` were verified in the local 4.110.0 JAR via javap.
+  Validation: The invalid-parent regression failed against the original adapter, then all six focused tests passed after hardening. Java 25 offline clean verify passed 53 tests with zero failures; EARS and architecture gates passed. Configuration is staged to a same-directory temporary file and atomically moved into place; the temporary file is removed on failed publication. Live server migration and crash simulation remain in TESTING.md.
+
+- [x] **TDD-007** - Publish migrated configuration without replacing a concurrent writer.
+  Tag: TDD
+  References: REQ-020, REQ-021, REQ-022; docs/implementation.md#persistence-compatibility
+  Acceptance: A configuration created after migration staging remains authoritative; publication exposes only a complete copy and fails closed if the filesystem cannot guarantee no-replace behavior.
+  Evidence: CodeRabbit review on FainNeito/ItemSignature#1 identified that `ATOMIC_MOVE` may replace the target despite the second existence check. Oracle JDK Files documentation states target replacement with `ATOMIC_MOVE` is implementation-specific, while `Files.createLink` creates a new directory entry and fails when it already exists (`java.nio.file.FileAlreadyExistsException`). Existing `LegacyConfigMigration.kt` stages a complete file beside the destination; existing JUnit 5 migration tests in `EnthusiaSignatureBrandingTest.kt` provide the fixture.
+  Validation: the focused test was red because no no-replace publisher existed; the publisher now uses a hard link and the focused branding tests pass. Java 25 offline `clean verify` passed 55 tests with zero failures or errors; EARS and architecture checks passed. Live filesystem and upgrade testing remain pending.
+
+- [x] **TDD-008** - Preserve the legacy namespaced signing command across the rebrand.
+  Tag: TDD
+  References: REQ-020, REQ-023; docs/implementation.md#persistence-compatibility
+  Acceptance: `/itemsignature:sign` resolves to the existing signing command after startup, alongside `/enthusiasignature:sign` and `/sign`, with unchanged permission behavior.
+  Evidence:
+  - CodeRabbit review on FainNeito/ItemSignature#1 at 2026-09-23T13:13:53Z identified the lost legacy namespaced command; `git show origin/main:README.md` line 26 documents `/itemsignature:sign` as a supported fallback.
+  - `src/main/resources/plugin.yml` declares the `sign` command under the renamed plugin, while `src/main/kotlin/net/enthusia/itemsignature/infrastructure/ItemSignaturePlugin.kt` registers its executor; `org.bukkit.command.CommandMap` is exposed by the project's Paper API for a fallback prefix.
+  - Existing `src/test/kotlin/net/enthusia/itemsignature/EnthusiaSignatureBrandingTest.kt` uses `org.mockbukkit.mockbukkit.MockBukkit` and `org.junit.jupiter.api` to test startup and command registration.
+  Validation: the focused registration test failed because `/itemsignature:sign` was absent while `/sign` and `/enthusiasignature:sign` resolved. Registering the existing command under the legacy fallback prefix made it green. Java 25 offline clean verify passed 55 tests with zero failures or errors; EARS and LayerRulesTest passed. Live Paper/Leaf command fallback remains in TESTING.md.
+

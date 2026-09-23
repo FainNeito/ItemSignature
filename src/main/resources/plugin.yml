@@ -1,4 +1,4 @@
-name: ItemSignature
+name: EnthusiaSignature
 version: '${project.version}'
 main: net.enthusia.itemsignature.infrastructure.ItemSignaturePlugin
 api-version: '1.21.11'
@@ -13,8 +13,11 @@ commands:
     description: Attach one permanent stat tracker to your held item.
     usage: /track <player_kills|mob_kills|blocks_broken>
   itemsignature:
-    description: Show help or reload configuration.
+    description: Legacy command to show help or reload configuration.
     usage: /itemsignature [reload]
+  enthusiasignature:
+    description: Show help or reload configuration.
+    usage: /enthusiasignature [reload]
 permissions:
   itemsignature.sign:
     default: true
