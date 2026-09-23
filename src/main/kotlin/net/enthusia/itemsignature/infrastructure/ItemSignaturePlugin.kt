@@ -44,13 +44,19 @@ open class ItemSignaturePlugin : JavaPlugin() {
         private set
 
     override fun onEnable() {
-        saveDefaultConfig()
-        try { loadSettings() } catch (ex: Exception) {
-            logger.severe("Invalid ItemSignature configuration: ${ex.message}")
+        try {
+            LegacyConfigMigration.copyIfMissing(
+                File(dataFolder.parentFile, "ItemSignature/config.yml").toPath(),
+                File(dataFolder, "config.yml").toPath()
+            )
+            saveDefaultConfig()
+            loadSettings()
+        } catch (ex: Exception) {
+            logger.severe("Unable to load EnthusiaSignature configuration: ${ex.message}")
             server.pluginManager.disablePlugin(this)
             return
         }
-        listOf("sign", "track", "itemsignature").forEach { getCommand(it)!!.setExecutor(this) }
+        listOf("sign", "track", "itemsignature", "enthusiasignature").forEach { getCommand(it)!!.setExecutor(this) }
         server.pluginManager.registerEvents(TrackingListener { service }, this)
     }
 
@@ -71,7 +77,7 @@ open class ItemSignaturePlugin : JavaPlugin() {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         try {
-            if (command.name == "itemsignature") {
+            if (command.name == "itemsignature" || command.name == "enthusiasignature") {
                 if (args.size == 1 && args[0].equals("reload", true)) {
                     if (!sender.hasPermission("itemsignature.reload")) throw InputFailure("no-permission")
                     try { loadSettings() } catch (ex: Exception) {
@@ -108,7 +114,7 @@ open class ItemSignaturePlugin : JavaPlugin() {
         val choices = when {
             args.size == 1 && command.name == "track" -> Stat.entries.filter { sender.hasPermission("itemsignature.track.${it.id}") }.map { it.id }
             args.size == 1 && command.name == "sign" -> listOf("confirm", "cancel", "--color")
-            args.size == 1 && command.name == "itemsignature" && sender.hasPermission("itemsignature.reload") -> listOf("reload")
+            args.size == 1 && command.name in listOf("itemsignature", "enthusiasignature") && sender.hasPermission("itemsignature.reload") -> listOf("reload")
             else -> emptyList()
         }
         return choices.filter { it.startsWith(args.lastOrNull() ?: "", true) }

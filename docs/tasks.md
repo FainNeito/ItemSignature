@@ -58,3 +58,17 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
 
   Final validation: full Maven clean verify passed 47 tests (zero failures/errors/skips), packaged ItemSignature-1.1.0.jar, EARS validator and import evidence gate passed; architecture checks passed. Live server/client acceptance remains in TESTING.md.
 
+- [x] **TDD-005** - Rebrand as EnthusiaSignature without losing existing configuration or item data.
+  Tag: TDD
+  References: REQ-006, REQ-007, REQ-011, REQ-012, REQ-020; docs/implementation.md#persistence-compatibility
+  Acceptance: Plugin metadata and JAR use EnthusiaSignature; old `itemsignature` PDC keys and permission nodes remain valid; `/itemsignature reload` remains available alongside `/enthusiasignature reload`; an old configuration is copied only if the new one is missing and never overwritten or removed. Migration failures must prevent a silent default reset. Automated tests cover migration and command compatibility.
+  Evidence:
+  - User confirmed "EnthusiaSignature as the official name" on 2026-09-23.
+  - `src/main/resources/plugin.yml` currently names ItemSignature and declares the legacy command and permissions.
+  - `pom.xml` and `.github/workflows/build.yml` define the artifact and CI path.
+  - `src/main/kotlin/net/enthusia/itemsignature/infrastructure/ItemSignaturePlugin.kt` calls `saveDefaultConfig()` before loading settings; changing plugin.yml name changes its Bukkit data-folder path.
+  - `src/main/kotlin/net/enthusia/itemsignature/infrastructure/ItemData.kt` stores keys under `itemsignature` and must remain unchanged.
+  - Existing `src/test/kotlin/net/enthusia/itemsignature/ItemSignatureTest.kt` uses MockBukkit and verifies configuration reload behavior.
+  - New test import `net.enthusia.itemsignature.infrastructure.LegacyConfigMigration` names the proposed local adapter; `org.mockbukkit.mockbukkit.MockBukkit` and `org.junit.jupiter.api` are already used in the existing test suite.
+  Validation: focused test was red because the migration adapter did not exist; implementation made all four branding/migration tests green. Java 25 `./mvnw -o -q clean verify` passed 51 tests with zero failures/errors; `node tools/spear/ears.mjs docs/requirements.md` and LayerRulesTest passed. The installable shaded JAR is `target/EnthusiaSignature-1.1.1.jar`. Live Paper/Leaf and old-config startup remain in TESTING.md.
+

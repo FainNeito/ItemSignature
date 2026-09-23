@@ -58,3 +58,6 @@ WHEN a player requests signing THE SYSTEM SHALL preview the signature and warn t
 
 ### REQ-019 - MiniMessage signing text
 WHEN permitted player text is rendered THE SYSTEM SHALL support MiniMessage named and hex colors, safe decorations and authorized glyphs, reject legacy color codes and unsafe tags, and insert template values as opaque components.
+
+### REQ-020 - EnthusiaSignature compatible rebrand
+WHEN an ItemSignature installation is replaced by EnthusiaSignature THE SYSTEM SHALL use EnthusiaSignature as its public plugin and artifact name, preserve existing `itemsignature` PDC and permissions, retain the legacy command, and copy an existing legacy configuration into the new plugin data folder only when the new configuration is absent, without modifying the legacy copy.
