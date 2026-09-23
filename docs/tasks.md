@@ -86,3 +86,13 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
   Evidence: CodeRabbit review on FainNeito/ItemSignature#1 identified that `ATOMIC_MOVE` may replace the target despite the second existence check. Oracle JDK Files documentation states target replacement with `ATOMIC_MOVE` is implementation-specific, while `Files.createLink` creates a new directory entry and fails when it already exists (`java.nio.file.FileAlreadyExistsException`). Existing `LegacyConfigMigration.kt` stages a complete file beside the destination; existing JUnit 5 migration tests in `EnthusiaSignatureBrandingTest.kt` provide the fixture.
   Validation: the focused test was red because no no-replace publisher existed; the publisher now uses a hard link and the focused branding tests pass. Java 25 offline `clean verify` passed 55 tests with zero failures or errors; EARS and architecture checks passed. Live filesystem and upgrade testing remain pending.
 
+- [x] **TDD-008** - Preserve the legacy namespaced signing command across the rebrand.
+  Tag: TDD
+  References: REQ-020, REQ-023; docs/implementation.md#persistence-compatibility
+  Acceptance: `/itemsignature:sign` resolves to the existing signing command after startup, alongside `/enthusiasignature:sign` and `/sign`, with unchanged permission behavior.
+  Evidence:
+  - CodeRabbit review on FainNeito/ItemSignature#1 at 2026-09-23T13:13:53Z identified the lost legacy namespaced command; `git show origin/main:README.md` line 26 documents `/itemsignature:sign` as a supported fallback.
+  - `src/main/resources/plugin.yml` declares the `sign` command under the renamed plugin, while `src/main/kotlin/net/enthusia/itemsignature/infrastructure/ItemSignaturePlugin.kt` registers its executor; `org.bukkit.command.CommandMap` is exposed by the project's Paper API for a fallback prefix.
+  - Existing `src/test/kotlin/net/enthusia/itemsignature/EnthusiaSignatureBrandingTest.kt` uses `org.mockbukkit.mockbukkit.MockBukkit` and `org.junit.jupiter.api` to test startup and command registration.
+  Validation: the focused registration test failed because `/itemsignature:sign` was absent while `/sign` and `/enthusiasignature:sign` resolved. Registering the existing command under the legacy fallback prefix made it green. Java 25 offline clean verify passed 55 tests with zero failures or errors; EARS and LayerRulesTest passed. Live Paper/Leaf command fallback remains in TESTING.md.
+

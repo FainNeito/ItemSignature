@@ -24,6 +24,10 @@ class EnthusiaSignatureBrandingTest {
             assertEquals("EnthusiaSignature", plugin.description.name)
             assertNotNull(server.getPluginCommand("itemsignature"))
             assertNotNull(server.getPluginCommand("enthusiasignature"))
+            val sign = server.getPluginCommand("sign")
+            assertNotNull(sign)
+            assertEquals(sign, server.getPluginCommand("enthusiasignature:sign"))
+            assertEquals(sign, server.getPluginCommand("itemsignature:sign"))
             assertTrue(plugin.dataFolder.name.startsWith("EnthusiaSignature"))
         } finally {
             MockBukkit.unmock()

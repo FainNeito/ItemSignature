@@ -67,3 +67,6 @@ WHEN legacy configuration discovery or copying fails THE SYSTEM SHALL refuse sta
 
 ### REQ-022 - Concurrent configuration publication
 WHEN a new configuration appears during legacy migration THE SYSTEM SHALL preserve that configuration without replacing it with the staged legacy copy.
+
+### REQ-023 - Legacy namespaced signing command
+WHEN ItemSignature is upgraded to EnthusiaSignature THE SYSTEM SHALL continue accepting `/itemsignature:sign` as the same signing command while retaining `/enthusiasignature:sign` and `/sign`.

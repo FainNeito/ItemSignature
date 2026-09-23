@@ -24,7 +24,7 @@ All item commands operate on a **single item in the main hand**. Split stacks fi
 | `/enthusiasignature reload` | Validate and reload settings; keep old settings if validation fails |
 | `/itemsignature reload` | Legacy alias with the same behavior |
 
-Namespaced commands such as `/enthusiasignature:sign` are available if another plugin also registers `/sign`.
+Namespaced commands `/enthusiasignature:sign` and the legacy `/itemsignature:sign` are available if another plugin also registers `/sign`.
 
 Each item supports one tracker, with no player reset/remove command. Once attached, it continues counting when the item changes hands; tracker permissions control attachment. Signing is always permanent. The warning and preview must be confirmed within 30 seconds while holding the unchanged item in the same slot. Changing the item, expiry, cancellation or a settings reload invalidates confirmation. Permissions are checked again when confirming.
 

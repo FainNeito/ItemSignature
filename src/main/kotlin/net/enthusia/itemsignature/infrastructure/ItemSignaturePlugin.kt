@@ -57,6 +57,7 @@ open class ItemSignaturePlugin : JavaPlugin() {
             return
         }
         listOf("sign", "track", "itemsignature", "enthusiasignature").forEach { getCommand(it)!!.setExecutor(this) }
+        server.commandMap.register("itemsignature", getCommand("sign")!!)
         server.pluginManager.registerEvents(TrackingListener { service }, this)
     }
 
