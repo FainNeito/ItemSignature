@@ -74,6 +74,29 @@ class EnthusiaSignatureBrandingTest {
         assertFalse(Files.exists(current))
     }
 
+    @Test fun `publication never replaces a configuration created after staging`() {
+        val staged = temp.resolve("staged.yml")
+        val current = temp.resolve("config.yml")
+        Files.writeString(staged, "marker: legacy\n")
+        Files.writeString(current, "marker: concurrent\n")
+
+        LegacyConfigMigration.publishWithoutReplacing(staged, current)
+
+        assertEquals("marker: concurrent\n", Files.readString(current))
+        assertEquals("marker: legacy\n", Files.readString(staged))
+    }
+
+    @Test fun `publication exposes a complete staged configuration`() {
+        val staged = temp.resolve("staged.yml")
+        val current = temp.resolve("config.yml")
+        Files.writeString(staged, "marker: legacy\n")
+
+        LegacyConfigMigration.publishWithoutReplacing(staged, current)
+
+        assertEquals("marker: legacy\n", Files.readString(current))
+        assertEquals("marker: legacy\n", Files.readString(staged))
+    }
+
     @Test fun `plugin startup loads the legacy settings before generating defaults`() {
         val server = MockBukkit.mock()
         try {

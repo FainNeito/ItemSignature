@@ -64,3 +64,6 @@ WHEN an ItemSignature installation is replaced by EnthusiaSignature THE SYSTEM S
 
 ### REQ-021 - Fail-closed legacy configuration migration
 WHEN legacy configuration discovery or copying fails THE SYSTEM SHALL refuse startup without creating or loading a partial replacement; WHEN legacy configuration is confirmed absent THE SYSTEM MAY use the packaged defaults; WHEN a new configuration already exists THE SYSTEM SHALL leave it authoritative.
+
+### REQ-022 - Concurrent configuration publication
+WHEN a new configuration appears during legacy migration THE SYSTEM SHALL preserve that configuration without replacing it with the staged legacy copy.

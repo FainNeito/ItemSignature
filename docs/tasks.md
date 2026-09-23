@@ -79,3 +79,10 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
   Evidence: CodeRabbit review on FainNeito/ItemSignature#1 identified ambiguous `Files.exists`, non-atomic `Files.copy`, and missing startup integration coverage. MockBukkit `PluginManagerMock.createTemporaryDirectory` and `getParentTemporaryDirectory` were verified in the local 4.110.0 JAR via javap.
   Validation: The invalid-parent regression failed against the original adapter, then all six focused tests passed after hardening. Java 25 offline clean verify passed 53 tests with zero failures; EARS and architecture gates passed. Configuration is staged to a same-directory temporary file and atomically moved into place; the temporary file is removed on failed publication. Live server migration and crash simulation remain in TESTING.md.
 
+- [x] **TDD-007** - Publish migrated configuration without replacing a concurrent writer.
+  Tag: TDD
+  References: REQ-020, REQ-021, REQ-022; docs/implementation.md#persistence-compatibility
+  Acceptance: A configuration created after migration staging remains authoritative; publication exposes only a complete copy and fails closed if the filesystem cannot guarantee no-replace behavior.
+  Evidence: CodeRabbit review on FainNeito/ItemSignature#1 identified that `ATOMIC_MOVE` may replace the target despite the second existence check. Oracle JDK Files documentation states target replacement with `ATOMIC_MOVE` is implementation-specific, while `Files.createLink` creates a new directory entry and fails when it already exists (`java.nio.file.FileAlreadyExistsException`). Existing `LegacyConfigMigration.kt` stages a complete file beside the destination; existing JUnit 5 migration tests in `EnthusiaSignatureBrandingTest.kt` provide the fixture.
+  Validation: the focused test was red because no no-replace publisher existed; the publisher now uses a hard link and the focused branding tests pass. Java 25 offline `clean verify` passed 55 tests with zero failures or errors; EARS and architecture checks passed. Live filesystem and upgrade testing remain pending.
+

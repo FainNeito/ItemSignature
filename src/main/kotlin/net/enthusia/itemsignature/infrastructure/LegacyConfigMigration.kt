@@ -1,6 +1,7 @@
 package net.enthusia.itemsignature.infrastructure
 
 import java.nio.file.Files
+import java.nio.file.FileAlreadyExistsException
 import java.nio.file.Path
 import java.nio.file.NoSuchFileException
 import java.nio.file.StandardCopyOption
@@ -28,11 +29,18 @@ internal object LegacyConfigMigration {
         val staged = Files.createTempFile(currentConfig.parent, ".enthusiasignature-", ".tmp")
         try {
             Files.copy(legacyConfig, staged, StandardCopyOption.REPLACE_EXISTING)
-            if (Files.exists(currentConfig)) return
-            if (!Files.notExists(currentConfig)) throw IOException("Cannot determine whether the current config exists: $currentConfig")
-            Files.move(staged, currentConfig, StandardCopyOption.ATOMIC_MOVE)
+            publishWithoutReplacing(staged, currentConfig)
         } finally {
             Files.deleteIfExists(staged)
+        }
+    }
+
+    /** A hard link publishes the complete staged file as one no-replace directory operation. */
+    internal fun publishWithoutReplacing(staged: Path, currentConfig: Path) {
+        try {
+            Files.createLink(currentConfig, staged)
+        } catch (_: FileAlreadyExistsException) {
+            // Another writer's configuration is authoritative.
         }
     }
 }
