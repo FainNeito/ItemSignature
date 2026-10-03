@@ -54,6 +54,7 @@ class TrackingListenerTest {
 
     private fun death(damager: Entity, pvp: Boolean = false): EntityDeathEvent {
         val victim = if (pvp) mock(Player::class.java) else mock(LivingEntity::class.java)
+        `when`(victim.uniqueId).thenReturn(java.util.UUID.randomUUID())
         val source = mock(org.bukkit.damage.DamageSource::class.java)
         `when`(source.directEntity).thenReturn(damager)
         `when`(source.causingEntity).thenReturn(if (damager is Projectile) player else damager)
@@ -70,6 +71,32 @@ class TrackingListenerTest {
         player.inventory.setItemInMainHand(tracked(Stat.PLAYER_KILLS))
         listener.onDeath(death(player, true))
         assertEquals(1L, value(player.inventory.itemInMainHand))
+    }
+
+    @Test fun `repeated victim cooldown spans weapons expires and does not consume untracked kills`() {
+        listener.trackingClock = java.time.Clock.fixed(java.time.Instant.EPOCH, java.time.ZoneOffset.UTC)
+        val event = death(player, true)
+        listener.onDeath(event) // no tracked weapon: must not consume a cooldown
+        player.inventory.setItemInMainHand(tracked(Stat.PLAYER_KILLS))
+        listener.onDeath(event)
+        assertEquals(1L, value(player.inventory.itemInMainHand))
+        listener.trackingClock = java.time.Clock.fixed(java.time.Instant.ofEpochSecond(299), java.time.ZoneOffset.UTC)
+        listener.onDeath(event)
+        assertEquals(1L, value(player.inventory.itemInMainHand))
+        player.inventory.setItemInMainHand(tracked(Stat.PLAYER_KILLS))
+        listener.onDeath(event)
+        assertEquals(0L, value(player.inventory.itemInMainHand))
+        listener.onDeath(death(player, true))
+        assertEquals(1L, value(player.inventory.itemInMainHand))
+        listener.trackingClock = java.time.Clock.fixed(java.time.Instant.ofEpochSecond(300), java.time.ZoneOffset.UTC)
+        listener.onDeath(event)
+        assertEquals(2L, value(player.inventory.itemInMainHand))
+        plugin.service.settings.yaml.set("settings.tracking.player-kills.anti-farming.enabled", false)
+        plugin.service.settings.yaml.save(java.io.File(plugin.dataFolder, "config.yml"))
+        server.dispatchCommand(server.consoleSender, "enthusiasignature reload")
+        listener.onDeath(event)
+        listener.onDeath(event)
+        assertEquals(4L, value(player.inventory.itemInMainHand))
     }
 
     @Test fun `arrow kill credits original bow after switching slots`() {
@@ -92,6 +119,44 @@ class TrackingListenerTest {
         player.inventory.setItem(4, null)
         listener.onDeath(death(projectile))
         assertEquals(0L, value(player.inventory.itemInMainHand))
+    }
+
+    @Test fun `projectiles share victim protection with melee and other killers remain independent`() {
+        val bow = tracked(Stat.PLAYER_KILLS, Material.BOW)
+        val projectile = mock(Projectile::class.java)
+        `when`(projectile.persistentDataContainer).thenReturn(ItemStack(Material.STONE).itemMeta!!.persistentDataContainer)
+        `when`(projectile.shooter).thenReturn(player)
+        val shoot = mock(EntityShootBowEvent::class.java)
+        `when`(shoot.entity).thenReturn(player)
+        `when`(shoot.bow).thenReturn(bow)
+        `when`(shoot.projectile).thenReturn(projectile)
+        listener.onShoot(shoot)
+        player.inventory.setItem(4, bow)
+        val event = death(projectile, true)
+        listener.onDeath(event)
+        listener.onDeath(event)
+        assertEquals(1L, value(player.inventory.getItem(4)!!))
+        player.inventory.setItemInMainHand(tracked(Stat.PLAYER_KILLS))
+        `when`(event.damageSource.directEntity).thenReturn(player)
+        listener.onDeath(event)
+        assertEquals(0L, value(player.inventory.itemInMainHand))
+        val other = server.addPlayer()
+        other.gameMode = GameMode.SURVIVAL
+        other.addAttachment(plugin, "itemsignature.track.player_kills", true)
+        val weapon = ItemStack(Material.DIAMOND_SWORD)
+        plugin.service.track(other, weapon, Stat.PLAYER_KILLS)
+        other.inventory.setItemInMainHand(weapon)
+        `when`(event.damageSource.directEntity).thenReturn(other)
+        `when`(event.damageSource.causingEntity).thenReturn(other)
+        listener.onDeath(event)
+        assertEquals(1L, value(other.inventory.itemInMainHand))
+    }
+
+    @Test fun `invalid cooldown config is rejected`() {
+        for (seconds in listOf(0L, -1L, 86401L)) {
+            plugin.service.settings.yaml.set("settings.tracking.player-kills.anti-farming.cooldown-seconds", seconds)
+            assertThrows(IllegalArgumentException::class.java) { Settings(plugin.service.settings.yaml) }
+        }
     }
 
     @Test fun `diary carrying old tracker tags is never redrawn by events`() {

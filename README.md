@@ -4,7 +4,7 @@ Kotlin plugin for **Paper/Leaf 1.21.11, Java 21+**. Adds confirmed permanent cre
 
 ## Install
 
-1. Put `target/EnthusiaSignature-1.1.1.jar` in your server's `plugins` folder. Remove the old ItemSignature JAR first; never run both builds together. Do not use the `original-` JAR.
+1. Put `target/EnthusiaSignature-1.2.0.jar` in your server's `plugins` folder. Replace the previous plugin JAR first; never run multiple builds together. Do not use the `original-` JAR.
 2. Restart the server. On first startup, an existing `plugins/ItemSignature/config.yml` is copied to `plugins/EnthusiaSignature/config.yml` if the new file is absent. The old file remains untouched. Edit the new file and use `/enthusiasignature reload`.
 3. Optionally install Nexo and distribute its resource pack. Configure the glyph IDs below to match your pack.
 
@@ -21,12 +21,18 @@ All item commands operate on a **single item in the main hand**. Split stacks fi
 | `/track player_kills` | Attach a player-kill counter |
 | `/track mob_kills` | Attach a non-player living-entity kill counter |
 | `/track blocks_broken` | Attach a blocks-mined counter |
+| `/track remove` | Remove your own tracker when enabled; discard its count |
+| `/esign reload` or `/enthusiasign reload` | Short aliases for the admin command |
 | `/enthusiasignature reload` | Validate and reload settings; keep old settings if validation fails |
 | `/itemsignature reload` | Legacy alias with the same behavior |
 
 Namespaced commands `/enthusiasignature:sign` and the legacy `/itemsignature:sign` are available if another plugin also registers `/sign`.
 
-Each item supports one tracker, with no player reset/remove command. Once attached, it continues counting when the item changes hands; tracker permissions control attachment. Signing is always permanent. The warning and preview must be confirmed within 30 seconds while holding the unchanged item in the same slot. Changing the item, expiry, cancellation or a settings reload invalidates confirmation. Permissions are checked again when confirming.
+Each item supports one tracker. Once attached, it continues counting when the item changes hands; tracker permissions control attachment. Signing is always permanent. The warning and preview must be confirmed within 30 seconds while holding the unchanged item in the same slot. Changing the item, expiry, cancellation or a settings reload invalidates confirmation. Permissions are checked again when confirming.
+
+Tracker removal is disabled by default. Enable `settings.tracking.allow-removal: true` and reload with `/esign reload` to allow `/track remove`. It requires `itemsignature.track.remove` (granted by default) and the recorded UUID of the player who applied the tracker. Trading an item does not transfer removal rights. Trackers created before 1.2.0 have no placer record and cannot be removed by this command. Removal discards the count and tracker identity, preserves the signature and unrelated lore/metadata, and permits attaching a fresh tracker starting at zero. Diary items remain protected.
+
+Player kill anti-farming is enabled by default under `settings.tracking.player-kills.anti-farming.enabled`. `cooldown-seconds` defaults to 300 and accepts 1–86400. Only one successfully credited kill per killer/victim pair counts during that interval, shared across swords and tracked bow/crossbow projectiles. Blocked kills do not extend the interval; untracked kills do not start it. Different victims and killers have independent intervals. Set `enabled: false` to count every eligible kill. Cooldowns are held in memory, survive configuration reloads, and reset on restart; stored item counters remain persistent. Mob and block counters are unaffected.
 
 ## Permissions and ranks
 
@@ -40,6 +46,7 @@ Each item supports one tracker, with no player reset/remove command. Once attach
 | `itemsignature.track.player_kills` | False | Attach PvP trackers |
 | `itemsignature.track.mob_kills` | False | Attach mob trackers |
 | `itemsignature.track.blocks_broken` | False | Attach mining trackers |
+| `itemsignature.track.remove` | Everyone | Remove a tracker you applied when the config allows it |
 | `itemsignature.reload` | Operators | Reload settings |
 
 For example, with LuckPerms:

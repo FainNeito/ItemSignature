@@ -9,6 +9,13 @@ settings:
     timezone: 'UTC'
   tracking:
     count-creative: false
+    # Only the recorded placer may remove a tracker. Old trackers have no placer record.
+    allow-removal: false
+    player-kills:
+      anti-farming:
+        enabled: true
+        # Per killer/victim pair, shared across weapons. Resets on server restart.
+        cooldown-seconds: 300
   nexo-integration:
     enabled: true
     use-discord-style-tags: true
@@ -49,6 +56,10 @@ messages:
   already-signed: '<red>This item is already signed by %player%.'
   tracker-applied: '<green>Tracker %stat_name% applied!'
   tracker-already-exists: '<red>This item already has a tracker.'
+  tracker-removal-disabled: '<red>Tracker removal is disabled on this server.'
+  tracker-missing: '<red>This item has no tracker.'
+  tracker-not-owner: '<red>Only the player who applied this tracker can remove it. Older trackers without a placer record cannot be removed.'
+  tracker-removed: '<green>Tracker removed. Its recorded count has been discarded.'
   invalid-stat: '<red>Choose player_kills, mob_kills, or blocks_broken.'
   data-error: '<red>This item has unsupported or damaged EnthusiaSignature data. Ask an administrator.'
   reloaded: '<green>EnthusiaSignature configuration reloaded.'

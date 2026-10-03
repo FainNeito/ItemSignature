@@ -96,3 +96,34 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
   - Existing `src/test/kotlin/net/enthusia/itemsignature/EnthusiaSignatureBrandingTest.kt` uses `org.mockbukkit.mockbukkit.MockBukkit` and `org.junit.jupiter.api` to test startup and command registration.
   Validation: the focused registration test failed because `/itemsignature:sign` was absent while `/sign` and `/enthusiasignature:sign` resolved. Registering the existing command under the legacy fallback prefix made it green. Java 25 offline clean verify passed 55 tests with zero failures or errors; EARS and LayerRulesTest passed. Live Paper/Leaf command fallback remains in TESTING.md.
 
+
+- [x] **TDD-009** - Add disabled-by-default owner-only tracker removal.
+  Tag: TDD
+  References: REQ-024; docs/implementation.md#persistence-compatibility
+  Acceptance: TrackerRemovalTest proves default rejection, ownership, permissions, legacy and diary guards, preservation and reattachment.
+  Evidence:
+  - Existing infrastructure ItemService.track, ItemData.editable/redraw and ItemSignaturePlugin.onCommand establish atomic mutation and command boundaries.
+  - TrackerRemovalTest reuses existing net.enthusia.itemsignature.infrastructure.*, net.enthusia.itemsignature.domain.Stat, net.kyori.adventure.text.Component, org.bukkit.Material, org.bukkit.inventory.ItemStack, org.junit.jupiter.api.*, org.junit.jupiter.api.Assertions.*, org.mockbukkit.mockbukkit.MockBukkit imports from baseline tests.
+  - Paper PersistentDataContainer.remove and UUID ownership use the same local API as existing ItemData keys; no new production imports.
+
+
+  Validation: removal-red.log records the retained-stat failure; clean verify passed all 57 tests, including LayerRulesTest, after implementation.
+
+- [x] **TDD-010** - Add configurable repeated-victim protection.
+  Tag: TDD
+  References: REQ-025; docs/implementation.md#infrastructure
+  Acceptance: enabled, disabled, expiry, melee and projectile scope and successful-increment-only timing are tested.
+  Evidence:
+  - Existing TrackingListener.onDeath and TrackingListenerTest use authoritative DamageSource and recorded projectile tracker IDs.
+  - java.time.Clock and java.util.UUID are JDK APIs already used by ItemService and signing tests; all test imports are unchanged.
+
+
+  Validation: farming-red.log records duplicate credit (expected 1, got 2); clean verify passed all 60 tests including architecture after implementation. Expiry, blocked-kill timing, different victims/killers, cross-weapon projectiles and disabled settings are covered.
+
+- [x] **INFRA-001** - Document configuration, expose short aliases and package version 1.2.0.
+  Tag: INFRA
+  References: REQ-024, REQ-025, REQ-026; docs/implementation.md#infrastructure
+  Evidence:
+  - Current plugin.yml defines the admin command; Bukkit command aliases use the standard aliases list in that same schema. No new imports.
+  - Current pom.xml and build.yml define the artifact version and CI upload path; README and TESTING describe installation and server acceptance.
+  Validation: clean verify passed 60 tests and produced EnthusiaSignature-1.2.0.jar; focused branding tests verify both aliases; EARS, diff whitespace and layer gates passed. Live server acceptance remains in TESTING.md.

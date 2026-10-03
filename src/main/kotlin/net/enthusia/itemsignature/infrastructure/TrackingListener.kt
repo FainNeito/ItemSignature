@@ -14,6 +14,8 @@ import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.persistence.PersistentDataType as Type
 
 class TrackingListener(private val service: () -> ItemService) : Listener {
+    internal var trackingClock: java.time.Clock = java.time.Clock.systemUTC()
+    private val recentKills = mutableMapOf<Pair<java.util.UUID, java.util.UUID>, Long>()
     private val weaponKey = ItemData.key("projectile_weapon")
     private val ownerKey = ItemData.key("projectile_owner")
     private fun allowed(player: Player) = service().settings.countCreative || player.gameMode != GameMode.CREATIVE
@@ -51,8 +53,22 @@ class TrackingListener(private val service: () -> ItemService) : Listener {
         if (!allowed(player)) return
         val stat = if (event.entity is Player) Stat.PLAYER_KILLS else Stat.MOB_KILLS
         safely {
+            val settings = service().settings
+            val now = trackingClock.millis()
+            recentKills.entries.removeIf { now - it.value >= settings.killCooldownMillis }
+            val pair = if (stat == Stat.PLAYER_KILLS && settings.preventKillFarming)
+                player.uniqueId to event.entity.uniqueId else null
+            if (pair != null && recentKills.containsKey(pair)) return@safely
+            fun increment(item: org.bukkit.inventory.ItemStack): Boolean {
+                if (!service().increment(item, stat)) return false
+                if (pair != null) recentKills[pair] = now
+                return true
+            }
             when (val damager = direct) {
-                is Player -> if (damager.uniqueId == player.uniqueId) incrementHand(player, stat)
+                is Player -> if (damager.uniqueId == player.uniqueId) {
+                    val item = player.inventory.itemInMainHand
+                    if (increment(item)) player.inventory.setItemInMainHand(item)
+                }
                 is Projectile -> {
                     val shooter = damager.shooter as? Player ?: return@safely
                     if (shooter.uniqueId != player.uniqueId) return@safely
@@ -67,7 +83,7 @@ class TrackingListener(private val service: () -> ItemService) : Listener {
                     if (matches.size == 1) {
                         val match = matches.single()
                         val item = match.value!!
-                        if (service().increment(item, stat)) player.inventory.setItem(match.index, item)
+                        if (increment(item)) player.inventory.setItem(match.index, item)
                     }
                 }
             }

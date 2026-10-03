@@ -94,6 +94,12 @@ open class ItemSignaturePlugin : JavaPlugin() {
             when (command.name) {
                 "sign" -> signing(player, item, args.toList())
                 "track" -> {
+                    if (args.size == 1 && args[0].equals("remove", true)) {
+                        service.removeTracker(player, item)
+                        player.inventory.setItemInMainHand(item)
+                        message(player, "tracker-removed")
+                        return true
+                    }
                     val stat = if (args.size == 1) Stat.from(args[0]) else null
                     if (stat == null) throw InputFailure("invalid-stat")
                     service.track(player, item, stat)
@@ -113,7 +119,8 @@ open class ItemSignaturePlugin : JavaPlugin() {
 
     override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): List<String> {
         val choices = when {
-            args.size == 1 && command.name == "track" -> Stat.entries.filter { sender.hasPermission("itemsignature.track.${it.id}") }.map { it.id }
+            args.size == 1 && command.name == "track" -> Stat.entries.filter { sender.hasPermission("itemsignature.track.${it.id}") }.map { it.id } +
+                if (service.settings.allowTrackerRemoval && sender.hasPermission("itemsignature.track.remove")) listOf("remove") else emptyList()
             args.size == 1 && command.name == "sign" -> listOf("confirm", "cancel", "--color")
             args.size == 1 && command.name in listOf("itemsignature", "enthusiasignature") && sender.hasPermission("itemsignature.reload") -> listOf("reload")
             else -> emptyList()

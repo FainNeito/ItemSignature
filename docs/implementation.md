@@ -42,3 +42,7 @@ The upstream EARS validator and skill texts are vendored with MIT licensing. The
 The original SPEAR adoption occurred in a workspace without Git. This checkout is now a Git repository; current tasks use a feature branch, focused/full verification, and a review PR.
 
 
+
+## Tracker removal and kill cooldowns (1.2.0)
+New trackers persist tracker_owner in the stable itemsignature namespace. Removal requires enabled configuration, permission and an exact placer UUID match, uses the existing diary/data/stack guards and lore reconciliation, and removes only stat/value/tracker_id/tracker_owner before redrawing. Legacy ownerless trackers remain valid for counting but cannot be removed.
+TrackingListener retains in-memory successful kill timestamps per killer/victim pair across settings reloads. Both melee and original-projectile-weapon paths use the same cooldown gate and record only successful increments. Expired entries are removed during death handling; restarting clears this transient policy state.

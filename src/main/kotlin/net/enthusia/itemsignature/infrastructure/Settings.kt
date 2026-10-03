@@ -16,6 +16,10 @@ class Settings(val yaml: YamlConfiguration) {
     val nexo = yaml.getBoolean("settings.nexo-integration.enabled", true)
     val discord = yaml.getBoolean("settings.nexo-integration.use-discord-style-tags", true)
     val countCreative = yaml.getBoolean("settings.tracking.count-creative", false)
+    val allowTrackerRemoval = yaml.getBoolean("settings.tracking.allow-removal", false)
+    val preventKillFarming = yaml.getBoolean("settings.tracking.player-kills.anti-farming.enabled", true)
+    val killCooldownMillis = yaml.getLong("settings.tracking.player-kills.anti-farming.cooldown-seconds", 300L)
+        .also { require(it in 1..86400) { "Player kill cooldown must be between 1 and 86400 seconds" } } * 1000L
     init {
         listOf("signature.basic", "signature.custom", "signature.quote", "signature.date-stamp", "tracking.stat-line").forEach {
             require(yaml.isString("formats.$it")) { "Missing or invalid format: $it" }
