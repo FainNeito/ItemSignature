@@ -11,6 +11,11 @@ settings:
     count-creative: false
     # Only the recorded placer may remove a tracker. Old trackers have no placer record.
     allow-removal: false
+    player-kills:
+      anti-farming:
+        enabled: true
+        # Per killer/victim pair, shared across weapons. Resets on server restart.
+        cooldown-seconds: 300
   nexo-integration:
     enabled: true
     use-discord-style-tags: true

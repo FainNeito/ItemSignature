@@ -108,3 +108,14 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
 
 
   Validation: removal-red.log records the retained-stat failure; clean verify passed all 57 tests, including LayerRulesTest, after implementation.
+
+- [x] **TDD-010** - Add configurable repeated-victim protection.
+  Tag: TDD
+  References: REQ-025; docs/implementation.md#infrastructure
+  Acceptance: enabled, disabled, expiry, melee and projectile scope and successful-increment-only timing are tested.
+  Evidence:
+  - Existing TrackingListener.onDeath and TrackingListenerTest use authoritative DamageSource and recorded projectile tracker IDs.
+  - java.time.Clock and java.util.UUID are JDK APIs already used by ItemService and signing tests; all test imports are unchanged.
+
+
+  Validation: farming-red.log records duplicate credit (expected 1, got 2); clean verify passed all 60 tests including architecture after implementation. Expiry, blocked-kill timing, different victims/killers, cross-weapon projectiles and disabled settings are covered.

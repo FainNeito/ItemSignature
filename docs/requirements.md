@@ -74,3 +74,7 @@ WHEN ItemSignature is upgraded to EnthusiaSignature THE SYSTEM SHALL continue ac
 ### REQ-024 - Optional owner-only tracker removal
 WHEN a player requests /track remove THE SYSTEM SHALL reject removal by default and, when enabled and permitted, remove only a tracker bearing that player's recorded placer UUID while preserving signatures and unrelated metadata and rejecting protected diaries or legacy trackers without ownership data.
 
+
+### REQ-025 - Configurable repeated-victim protection
+WHEN player kill protection is enabled THE SYSTEM SHALL count at most one eligible tracked kill per killer and victim within the configured cooldown across weapons, without extending the cooldown for blocked or untracked kills; WHEN protection is disabled THE SYSTEM SHALL count every eligible kill.
+
