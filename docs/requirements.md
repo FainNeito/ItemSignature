@@ -78,3 +78,6 @@ WHEN a player requests /track remove THE SYSTEM SHALL reject removal by default 
 ### REQ-025 - Configurable repeated-victim protection
 WHEN player kill protection is enabled THE SYSTEM SHALL count at most one eligible tracked kill per killer and victim within the configured cooldown across weapons, without extending the cooldown for blocked or untracked kills; WHEN protection is disabled THE SYSTEM SHALL count every eligible kill.
 
+
+### REQ-026 - Short admin aliases
+WHEN a sender uses /esign or /enthusiasign THE SYSTEM SHALL route to the existing EnthusiaSignature admin command with unchanged permission checks.

@@ -17,6 +17,7 @@ commands:
     usage: /itemsignature [reload]
   enthusiasignature:
     description: Show help or reload configuration.
+    aliases: [enthusiasign, esign]
     usage: /enthusiasignature [reload]
 permissions:
   itemsignature.sign:

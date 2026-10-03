@@ -20,5 +20,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: EnthusiaSignature
-          path: target/EnthusiaSignature-1.1.1.jar
+          path: target/EnthusiaSignature-1.2.0.jar
 

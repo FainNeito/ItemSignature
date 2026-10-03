@@ -24,6 +24,8 @@ class EnthusiaSignatureBrandingTest {
             assertEquals("EnthusiaSignature", plugin.description.name)
             assertNotNull(server.getPluginCommand("itemsignature"))
             assertNotNull(server.getPluginCommand("enthusiasignature"))
+            assertEquals(server.getPluginCommand("enthusiasignature"), server.getPluginCommand("esign"))
+            assertEquals(server.getPluginCommand("enthusiasignature"), server.getPluginCommand("enthusiasign"))
             val sign = server.getPluginCommand("sign")
             assertNotNull(sign)
             assertEquals(sign, server.getPluginCommand("enthusiasignature:sign"))

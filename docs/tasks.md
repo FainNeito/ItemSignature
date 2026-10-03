@@ -119,3 +119,11 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
 
 
   Validation: farming-red.log records duplicate credit (expected 1, got 2); clean verify passed all 60 tests including architecture after implementation. Expiry, blocked-kill timing, different victims/killers, cross-weapon projectiles and disabled settings are covered.
+
+- [x] **INFRA-001** - Document configuration, expose short aliases and package version 1.2.0.
+  Tag: INFRA
+  References: REQ-024, REQ-025, REQ-026; docs/implementation.md#infrastructure
+  Evidence:
+  - Current plugin.yml defines the admin command; Bukkit command aliases use the standard aliases list in that same schema. No new imports.
+  - Current pom.xml and build.yml define the artifact version and CI upload path; README and TESTING describe installation and server acceptance.
+  Validation: clean verify passed 60 tests and produced EnthusiaSignature-1.2.0.jar; focused branding tests verify both aliases; EARS, diff whitespace and layer gates passed. Live server acceptance remains in TESTING.md.
