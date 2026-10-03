@@ -70,3 +70,7 @@ WHEN a new configuration appears during legacy migration THE SYSTEM SHALL preser
 
 ### REQ-023 - Legacy namespaced signing command
 WHEN ItemSignature is upgraded to EnthusiaSignature THE SYSTEM SHALL continue accepting `/itemsignature:sign` as the same signing command while retaining `/enthusiasignature:sign` and `/sign`.
+
+### REQ-024 - Optional owner-only tracker removal
+WHEN a player requests /track remove THE SYSTEM SHALL reject removal by default and, when enabled and permitted, remove only a tracker bearing that player's recorded placer UUID while preserving signatures and unrelated metadata and rejecting protected diaries or legacy trackers without ownership data.
+

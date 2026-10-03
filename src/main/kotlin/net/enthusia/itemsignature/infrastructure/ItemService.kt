@@ -71,6 +71,19 @@ class ItemService(val settings: Settings, val renderer: TextRenderer, private va
         ItemData.set(meta, "stat", stat.id)
         ItemData.set(meta, "value", 0L)
         ItemData.set(meta, "tracker_id", UUID.randomUUID().toString())
+        ItemData.set(meta, "tracker_owner", player.uniqueId.toString())
+        ItemData.redraw(meta, editable, renderer)
+        item.itemMeta = meta
+    }
+
+    fun removeTracker(player: Player, item: ItemStack) {
+        if (!settings.allowTrackerRemoval) throw InputFailure("tracker-removal-disabled")
+        permission(player, "track.remove")
+        val meta = meta(item)
+        if (ItemData.string(meta, "stat") == null) throw InputFailure("tracker-missing")
+        if (ItemData.string(meta, "tracker_owner") != player.uniqueId.toString()) throw InputFailure("tracker-not-owner")
+        val editable = ItemData.editable(meta)
+        listOf("stat", "value", "tracker_id", "tracker_owner").forEach { meta.persistentDataContainer.remove(ItemData.key(it)) }
         ItemData.redraw(meta, editable, renderer)
         item.itemMeta = meta
     }

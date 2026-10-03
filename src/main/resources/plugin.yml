@@ -10,8 +10,8 @@ commands:
     description: Permanently sign your held item.
     usage: '/sign [--color <red or #RRGGBB>] [message] | confirm | cancel'
   track:
-    description: Attach one permanent stat tracker to your held item.
-    usage: /track <player_kills|mob_kills|blocks_broken>
+    description: Attach a stat tracker or remove your own tracker when enabled.
+    usage: /track <player_kills|mob_kills|blocks_broken|remove>
   itemsignature:
     description: Legacy command to show help or reload configuration.
     usage: /itemsignature [reload]
@@ -39,3 +39,5 @@ permissions:
     default: false
   itemsignature.reload:
     default: op
+  itemsignature.track.remove:
+    default: true

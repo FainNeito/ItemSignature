@@ -16,6 +16,7 @@ class Settings(val yaml: YamlConfiguration) {
     val nexo = yaml.getBoolean("settings.nexo-integration.enabled", true)
     val discord = yaml.getBoolean("settings.nexo-integration.use-discord-style-tags", true)
     val countCreative = yaml.getBoolean("settings.tracking.count-creative", false)
+    val allowTrackerRemoval = yaml.getBoolean("settings.tracking.allow-removal", false)
     init {
         listOf("signature.basic", "signature.custom", "signature.quote", "signature.date-stamp", "tracking.stat-line").forEach {
             require(yaml.isString("formats.$it")) { "Missing or invalid format: $it" }
