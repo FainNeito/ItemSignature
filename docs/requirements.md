@@ -85,3 +85,7 @@ WHEN a sender uses /esign or /enthusiasign THE SYSTEM SHALL route to the existin
 ### REQ-027 - Item-specific tracker types
 WHEN a player attaches one of the twelve equipment trackers THE SYSTEM SHALL enforce its matching material family and individual permission, preserve all existing tracker semantics, and reject counter updates after material substitution.
 
+
+### REQ-028 - Successful equipment actions
+WHEN an eligible equipment action succeeds THE SYSTEM SHALL credit only its identified item for each arrow fired, caught fishing item, sheep sheared, shield disabled, riptide, thrown trident, completed portal ignition, farmland conversion or completed suspicious-block brushing while excluding cancellations, nonmatching actions and excluded creative players.
+

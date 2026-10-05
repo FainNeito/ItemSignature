@@ -137,3 +137,16 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
   - Local Paper 1.21.11 API javap org.bukkit.Material confirms copper and other boot/axe/hoe/spear variants, ELYTRA, FISHING_ROD, FLINT_AND_STEEL, BOW, CROSSBOW, TRIDENT, SHEARS, BRUSH.
   - No new import paths; item family policy is framework-free string matching in domain.
   Validation: specific-red.log contains two missing-ID assertion failures; clean verify passes 62 tests including architecture. Lore normalization coverage now chooses an eligible item for each tracker.
+
+- [x] **TDD-012** - Attribute successful equipment actions.
+  Tag: TDD
+  References: REQ-028, REQ-002, REQ-009; docs/implementation.md#infrastructure
+  Acceptance: EquipmentActionTest verifies successful/cancelled actions, offhand and moved-slot identity, completed transitions and trident pickup persistence.
+  Evidence:
+  - Local Paper API javap verifies org.bukkit.event.entity.EntityShootBowEvent, org.bukkit.event.player.PlayerFishEvent, org.bukkit.event.player.PlayerShearEntityEvent, io.papermc.paper.event.player.PlayerShieldDisableEvent, org.bukkit.event.player.PlayerRiptideEvent, com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent, org.bukkit.event.world.PortalCreateEvent, org.bukkit.event.entity.EntityChangeBlockEvent, org.bukkit.event.player.PlayerInteractEvent, org.bukkit.inventory.EquipmentSlot, org.bukkit.entity.Trident and AbstractArrow.itemStack.
+  - PaperMC/Paper c5eb0790 TridentItem.java.patch installs pickupItemStack after the launch event; BrushableBlockEntity.java.patch emits EntityChangeBlockEvent before completed brushing; PortalShape.java.patch attributes FIRE creation to the initiating entity.
+  - PaperMC/Paper issue 13721 confirms hoes do not emit EntityChangeBlockEvent on 1.21.11: use an allowed interaction snapshot and next-tick farmland verification.
+  - New test imports org.bukkit.*, org.bukkit.block.BlockFace, org.bukkit.entity.*, org.bukkit.event.block.Action, org.bukkit.event.player.*, org.bukkit.inventory.EquipmentSlot, org.mockito.Mockito.* are baseline API fixtures; new infrastructure javaPlugin scheduler wiring uses the existing org.bukkit.plugin.java.JavaPlugin adapter.
+
+  Import evidence: local Paper API also verifies org.bukkit.entity.AbstractArrow, org.bukkit.entity.Player, org.bukkit.entity.Sheep, org.bukkit.entity.Trident, org.bukkit.event.Event, org.bukkit.GameMode, org.bukkit.Material, org.bukkit.event.EventHandler, org.bukkit.event.EventPriority, org.bukkit.event.Listener. Internal Stat/ItemService imports retain existing contracts.
+  Validation: action-red.log records nine action-counter failures with no fixture errors; clean verify passes 71 tests including architecture after implementation.
