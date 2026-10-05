@@ -93,3 +93,7 @@ WHEN an eligible equipment action succeeds THE SYSTEM SHALL credit only its iden
 ### REQ-029 - Equipped travel counters
 WHEN a noncancelled eligible move occurs THE SYSTEM SHALL add horizontal on-foot ground distance to worn boots or three-dimensional gliding distance to worn elytra in persistent centimeters with fractional carry and meter display, excluding teleports, world changes, riding and non-gliding flight and saturating without overflow.
 
+
+### REQ-030 - Native spear lunge support
+WHEN a runtime supplies Paper's native spear lunge event THE SYSTEM SHALL count noncancelled positive-power player lunges on the actively used spear; IF the event is unavailable THEN THE SYSTEM SHALL keep the plugin operational and reject command attachment of that unavailable tracker with a clear message.
+

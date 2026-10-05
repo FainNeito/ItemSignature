@@ -16,6 +16,7 @@ open class ItemSignaturePlugin : JavaPlugin() {
     internal var confirmationClock: java.time.Clock = java.time.Clock.systemUTC()
     private data class Pending(val item: org.bukkit.inventory.ItemStack, val slot: Int, val args: List<String>, val expires: Long)
     private val pending = mutableMapOf<java.util.UUID, Pending>()
+    private lateinit var lunge: LungeTrackingBridge
 
     private fun signing(player: Player, item: org.bukkit.inventory.ItemStack, args: List<String>) {
         val now = confirmationClock.millis()
@@ -61,6 +62,9 @@ open class ItemSignaturePlugin : JavaPlugin() {
         server.pluginManager.registerEvents(TrackingListener { service }, this)
         server.pluginManager.registerEvents(EquipmentTrackingListener(this) { service }, this)
         server.pluginManager.registerEvents(DistanceTrackingListener { service }, this)
+        lunge = LungeTrackingBridge(this) { service }
+        lunge.register()
+        if (!lunge.available) logger.info("Native spear lunge events are unavailable; the times_lunged tracker is disabled on this runtime.")
     }
 
     private fun loadSettings() {
@@ -104,6 +108,7 @@ open class ItemSignaturePlugin : JavaPlugin() {
                     }
                     val stat = if (args.size == 1) Stat.from(args[0]) else null
                     if (stat == null) throw InputFailure("invalid-stat")
+                    if (stat == Stat.TIMES_LUNGED && !lunge.available) throw InputFailure("tracker-unavailable")
                     service.track(player, item, stat)
                     message(player, "tracker-applied", mapOf("stat_name" to service.settings.statName(stat)))
                 }
@@ -121,7 +126,10 @@ open class ItemSignaturePlugin : JavaPlugin() {
 
     override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): List<String> {
         val choices = when {
-            args.size == 1 && command.name == "track" -> Stat.entries.filter { sender.hasPermission("itemsignature.track.${it.id}") }.map { it.id } +
+            args.size == 1 && command.name == "track" -> Stat.entries.filter {
+                sender.hasPermission("itemsignature.track.${it.id}") && (it != Stat.TIMES_LUNGED || lunge.available) &&
+                    (sender !is Player || it.accepts(sender.inventory.itemInMainHand.type.name))
+            }.map { it.id } +
                 if (service.settings.allowTrackerRemoval && sender.hasPermission("itemsignature.track.remove")) listOf("remove") else emptyList()
             args.size == 1 && command.name == "sign" -> listOf("confirm", "cancel", "--color")
             args.size == 1 && command.name in listOf("itemsignature", "enthusiasignature") && sender.hasPermission("itemsignature.reload") -> listOf("reload")

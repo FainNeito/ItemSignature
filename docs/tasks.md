@@ -163,3 +163,16 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
 
   Import evidence: DistanceTrackingListener reuses net.enthusia.itemsignature.domain.Stat, org.bukkit.GameMode, org.bukkit.event.EventHandler, org.bukkit.event.EventPriority, org.bukkit.event.Listener and verified move/slot APIs above; java.math.BigDecimal is JDK meter formatting with no new library.
   Validation: distance-red.log records ground/gliding and fractional counter failures; clean verify passes 74 tests including architecture, saturation and exclusions after implementation.
+
+- [x] **TDD-014** - Safely bridge native spear lunges across runtime versions.
+  Tag: TDD
+  References: REQ-030; docs/implementation.md#infrastructure
+  Acceptance: native-event fixture proves active offhand attribution, cancellation and zero-power exclusion; missing event discovery and command availability are covered; actual newer API binary contract is checked.
+  Evidence:
+  - Official https://jd.papermc.io/paper/26.1.2/io/papermc/paper/event/entity/EntityLungeEvent.html and PaperMC/Paper main source confirm EntityLungeEvent(LivingEntity,int), getLungePower, Cancellable and EntityEvent base contract. Local 1.21.11 API lacks this class; cached 26.2 API provides it.
+  - Test-only io.papermc.paper.event.entity.EntityLungeEvent fixture matches that verified contract and is excluded from production packaging; org.bukkit.entity.LivingEntity, org.bukkit.event.Cancellable, org.bukkit.event.HandlerList, org.bukkit.event.entity.EntityEvent are verified local Bukkit APIs.
+  - Local LivingEntity javap confirms activeItem/activeItemHand; Bukkit PluginManager.registerEvent and org.bukkit.plugin.EventExecutor provide optional runtime wiring; Java ClassLoader/Class reflection are stdlib.
+  - Remaining test/adapter imports reuse baseline org.bukkit.GameMode, org.bukkit.Material, org.bukkit.inventory.EquipmentSlot, org.bukkit.inventory.ItemStack, org.junit.jupiter.api.*, org.mockito.Mockito.* and project infrastructure/domain classes.
+
+  Import evidence: LungeTrackingBridge uses existing net.enthusia.itemsignature.domain.Stat, org.bukkit.GameMode, org.bukkit.entity.Player, org.bukkit.event.EventPriority, org.bukkit.event.Listener, org.bukkit.plugin.java.JavaPlugin and the Cancellable/EntityEvent/EquipmentSlot contracts verified above.
+  Validation: lunge-red.log records a native-event counter failure; focused discovery/command gating and full clean verify pass 77 tests including architecture. javap confirms the actual 26.2 build 124 native event binary contract; no live server/client proof is claimed.
