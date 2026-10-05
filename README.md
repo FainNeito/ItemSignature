@@ -158,3 +158,6 @@ Creative-mode tracking remains disabled by default; enable `settings.tracking.co
 ## Updating to 1.1.1 (EnthusiaSignature)
 
 Remove the old ItemSignature JAR and install `EnthusiaSignature-1.1.1.jar`. Keep a backup of the old `plugins/ItemSignature` directory. On startup, the old configuration is copied only if `plugins/EnthusiaSignature/config.yml` does not already exist; a copy failure disables the plugin instead of silently replacing settings with defaults. The previous directory is never deleted. Existing item data stays under `itemsignature:*`, and all `itemsignature.*` permissions remain valid. The old `/itemsignature` command remains available beside `/enthusiasignature`.
+
+## Halloween signature icons
+See [the Halloween Nexo integration](resourcepack/halloween/README.md) for the fifteen icons, collision-checked preparation, permissions and signature examples. These glyphs are excluded from guild emoji selection; no plugin upgrade is required.
