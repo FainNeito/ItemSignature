@@ -11,5 +11,8 @@ object CustomizationPolicy {
         else -> null
     }
 
-    fun nextCounter(value: Long): Long = if (value == Long.MAX_VALUE) value else value + 1
+    fun nextCounter(value: Long, amount: Long = 1): Long {
+        require(amount >= 0)
+        return if (value > Long.MAX_VALUE - amount) Long.MAX_VALUE else value + amount
+    }
 }

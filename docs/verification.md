@@ -28,3 +28,9 @@ Real-client Nexo pack rendering, live plugin coexistence and server-restart acce
 
 | REQ-021 | EnthusiaSignatureBrandingTest: invalid legacy parent fails rather than looking absent; first plugin startup loads legacy max-length settings; atomic same-directory staging prevents partial destination publication. Real filesystem crash testing remains in TESTING.md. |
 
+
+| REQ-024, REQ-025, REQ-026 | TrackerRemovalTest, TrackingListenerTest repeated-victim tests and EnthusiaSignatureBrandingTest command aliases; merged 1.2.0 baseline |
+| REQ-027 | SpecificTrackerTest: all twelve IDs, permission gates, wrong-item attachment/update rejection, material variants, ownership and unchanged generic trackers; LoreRepairTest covers every ID |
+| REQ-028 | EquipmentActionTest: registered successful/cancelled action events, offhand, arrows versus fireworks, sheep-only, positive shield cooldown, original trident pickup after vanilla overwrite, farmland transition and brush/portal completion |
+| REQ-029 | DistanceTrackerTest: worn FEET/CHEST counters, horizontal/3D separation, fractional carry, meter display, exclusions and bulk saturation |
+| REQ-030 | LungeTrackerTest: test-only native event fixture, active offhand, cancellation/zero power, discovery without the event and unsupported command gating. javap verifies actual 26.2 build 124 and 26.3 build 8 event contracts; live acceptance remains pending. |

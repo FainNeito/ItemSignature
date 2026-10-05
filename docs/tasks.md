@@ -127,3 +127,61 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
   - Current plugin.yml defines the admin command; Bukkit command aliases use the standard aliases list in that same schema. No new imports.
   - Current pom.xml and build.yml define the artifact version and CI upload path; README and TESTING describe installation and server acceptance.
   Validation: clean verify passed 60 tests and produced EnthusiaSignature-1.2.0.jar; focused branding tests verify both aliases; EARS, diff whitespace and layer gates passed. Live server acceptance remains in TESTING.md.
+
+- [x] **TDD-011** - Add twelve item-bound tracker types.
+  Tag: TDD
+  References: REQ-027; docs/implementation.md#domain
+  Acceptance: SpecificTrackerTest covers all IDs, material variants, attachment and increment guards, permissions and old unrestricted IDs.
+  Evidence:
+  - Existing domain.Stat, infrastructure.ItemService and SpecificTrackerTest reuse baseline imports and persistence boundaries.
+  - Local Paper 1.21.11 API javap org.bukkit.Material confirms copper and other boot/axe/hoe/spear variants, ELYTRA, FISHING_ROD, FLINT_AND_STEEL, BOW, CROSSBOW, TRIDENT, SHEARS, BRUSH.
+  - No new import paths; item family policy is framework-free string matching in domain.
+  Validation: specific-red.log contains two missing-ID assertion failures; clean verify passes 62 tests including architecture. Lore normalization coverage now chooses an eligible item for each tracker.
+
+- [x] **TDD-012** - Attribute successful equipment actions.
+  Tag: TDD
+  References: REQ-028, REQ-002, REQ-009; docs/implementation.md#infrastructure
+  Acceptance: EquipmentActionTest verifies successful/cancelled actions, offhand and moved-slot identity, completed transitions and trident pickup persistence.
+  Evidence:
+  - Local Paper API javap verifies org.bukkit.event.entity.EntityShootBowEvent, org.bukkit.event.player.PlayerFishEvent, org.bukkit.event.player.PlayerShearEntityEvent, io.papermc.paper.event.player.PlayerShieldDisableEvent, org.bukkit.event.player.PlayerRiptideEvent, com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent, org.bukkit.event.world.PortalCreateEvent, org.bukkit.event.entity.EntityChangeBlockEvent, org.bukkit.event.player.PlayerInteractEvent, org.bukkit.inventory.EquipmentSlot, org.bukkit.entity.Trident and AbstractArrow.itemStack.
+  - PaperMC/Paper c5eb0790 TridentItem.java.patch installs pickupItemStack after the launch event; BrushableBlockEntity.java.patch emits EntityChangeBlockEvent before completed brushing; PortalShape.java.patch attributes FIRE creation to the initiating entity.
+  - PaperMC/Paper issue 13721 confirms hoes do not emit EntityChangeBlockEvent on 1.21.11: use an allowed interaction snapshot and next-tick farmland verification.
+  - New test imports org.bukkit.*, org.bukkit.block.BlockFace, org.bukkit.entity.*, org.bukkit.event.block.Action, org.bukkit.event.player.*, org.bukkit.inventory.EquipmentSlot, org.mockito.Mockito.* are baseline API fixtures; new infrastructure javaPlugin scheduler wiring uses the existing org.bukkit.plugin.java.JavaPlugin adapter.
+
+  Import evidence: local Paper API also verifies org.bukkit.entity.AbstractArrow, org.bukkit.entity.Player, org.bukkit.entity.Sheep, org.bukkit.entity.Trident, org.bukkit.event.Event, org.bukkit.GameMode, org.bukkit.Material, org.bukkit.event.EventHandler, org.bukkit.event.EventPriority, org.bukkit.event.Listener. Internal Stat/ItemService imports retain existing contracts.
+  Validation: action-red.log records nine action-counter failures with no fixture errors; clean verify passes 71 tests including architecture after implementation.
+
+- [x] **TDD-013** - Persist distance on worn equipment.
+  Tag: TDD
+  References: REQ-029; docs/implementation.md#application
+  Acceptance: DistanceTrackerTest covers worn slots, gliding/ground separation, fractional carry, meter display, teleport/cancellation/riding/creative exclusions and bulk saturation.
+  Evidence:
+  - Local Paper API verifies org.bukkit.event.player.PlayerMoveEvent and org.bukkit.event.player.PlayerTeleportEvent, org.bukkit.inventory.EquipmentSlot.FEET/CHEST and PlayerInventory.getItem/setItem.
+  - PlayerStatisticIncrementEvent documentation explicitly excludes movement statistics: use move coordinates instead of assuming stat events fire.
+  - Existing ItemData LONG counters and CustomizationPolicy.nextCounter provide persistence and saturation; JDK double math and PersistentDataType.DOUBLE store fractional centimeters.
+  - Tests reuse existing org.bukkit.*, org.junit.jupiter.api.*, org.mockito.Mockito.* and infrastructure/domain imports; fully qualified Adventure plain serializer already appears in lore tests.
+
+  Import evidence: DistanceTrackingListener reuses net.enthusia.itemsignature.domain.Stat, org.bukkit.GameMode, org.bukkit.event.EventHandler, org.bukkit.event.EventPriority, org.bukkit.event.Listener and verified move/slot APIs above; java.math.BigDecimal is JDK meter formatting with no new library.
+  Validation: distance-red.log records ground/gliding and fractional counter failures; clean verify passes 74 tests including architecture, saturation and exclusions after implementation.
+
+- [x] **TDD-014** - Safely bridge native spear lunges across runtime versions.
+  Tag: TDD
+  References: REQ-030; docs/implementation.md#infrastructure
+  Acceptance: native-event fixture proves active offhand attribution, cancellation and zero-power exclusion; missing event discovery and command availability are covered; actual newer API binary contract is checked.
+  Evidence:
+  - Official https://jd.papermc.io/paper/26.1.2/io/papermc/paper/event/entity/EntityLungeEvent.html and PaperMC/Paper main source confirm EntityLungeEvent(LivingEntity,int), getLungePower, Cancellable and EntityEvent base contract. Local 1.21.11 API lacks this class; cached 26.2 API provides it.
+  - Test-only io.papermc.paper.event.entity.EntityLungeEvent fixture matches that verified contract and is excluded from production packaging; org.bukkit.entity.LivingEntity, org.bukkit.event.Cancellable, org.bukkit.event.HandlerList, org.bukkit.event.entity.EntityEvent are verified local Bukkit APIs.
+  - Local LivingEntity javap confirms activeItem/activeItemHand; Bukkit PluginManager.registerEvent and org.bukkit.plugin.EventExecutor provide optional runtime wiring; Java ClassLoader/Class reflection are stdlib.
+  - Remaining test/adapter imports reuse baseline org.bukkit.GameMode, org.bukkit.Material, org.bukkit.inventory.EquipmentSlot, org.bukkit.inventory.ItemStack, org.junit.jupiter.api.*, org.mockito.Mockito.* and project infrastructure/domain classes.
+
+  Import evidence: LungeTrackingBridge uses existing net.enthusia.itemsignature.domain.Stat, org.bukkit.GameMode, org.bukkit.entity.Player, org.bukkit.event.EventPriority, org.bukkit.event.Listener, org.bukkit.plugin.java.JavaPlugin and the Cancellable/EntityEvent/EquipmentSlot contracts verified above.
+  Validation: lunge-red.log records a native-event counter failure; focused discovery/command gating and full clean verify pass 77 tests including architecture. javap confirms the actual 26.2 build 124 native event binary contract; no live server/client proof is claimed.
+
+- [x] **INFRA-002** - Package and document item-specific trackers.
+  Tag: INFRA
+  References: REQ-027, REQ-028, REQ-029, REQ-030; docs/implementation.md#infrastructure
+  Acceptance: twelve permission nodes and default labels are shipped, versioned artifact/CI match, commands and runtime limits are documented, canonical current base is checked and reviewable PR delivery is prepared.
+  Evidence:
+  - Existing plugin.yml/config.yml define permission and message schemas; pom.xml and build.yml define the canonical Maven artifact path. No behavioral proof/engine applies to these metadata/documentation edits.
+  - Behavioral implementation has explicit TDD-011 through TDD-014 red/green evidence. Public Paper API contracts and current main are verified in those tasks.
+  Validation: canonical offline Maven clean verify passed all 77 tests, zero failures/errors/skips, including LayerRulesTest. EARS and whitespace checks passed; shaded 1.3.0 JAR contains the three new adapters and excludes the native-event test fixture. SHA-256 819e636f1d93e303891b72ea4bba2a5f51c8054364296e465b3f47fc1c20315f. This is an unmerged local test artifact; no deployment or client acceptance is claimed.

@@ -17,8 +17,10 @@ object ItemData {
 
     fun string(meta: ItemMeta, name: String): String? = read { meta.persistentDataContainer.get(key(name), Type.STRING) }
     fun number(meta: ItemMeta, name: String): Long? = read { meta.persistentDataContainer.get(key(name), Type.LONG) }
+    fun decimal(meta: ItemMeta, name: String): Double? = read { meta.persistentDataContainer.get(key(name), Type.DOUBLE) }
     fun set(meta: ItemMeta, name: String, value: String) = meta.persistentDataContainer.set(key(name), Type.STRING, value)
     fun set(meta: ItemMeta, name: String, value: Long) = meta.persistentDataContainer.set(key(name), Type.LONG, value)
+    fun set(meta: ItemMeta, name: String, value: Double) = meta.persistentDataContainer.set(key(name), Type.DOUBLE, value)
     fun lines(meta: ItemMeta, name: String): List<Component> = read {
         string(meta, name)?.takeIf { it.isNotEmpty() }?.split('\n')?.map(json::deserialize) ?: emptyList()
     }
@@ -42,6 +44,11 @@ object ItemData {
             Stat.from(string(meta, "stat") ?: "") ?: throw InputFailure("data-error")
             if ((number(meta, "value") ?: -1) < 0) throw InputFailure("data-error")
             read { java.util.UUID.fromString(string(meta, "tracker_id")) }
+        }
+        if (pdc.has(key("distance_remainder"))) {
+            val remainder = decimal(meta, "distance_remainder") ?: throw InputFailure("data-error")
+            if (Stat.from(string(meta, "stat").orEmpty())?.distance != true || !remainder.isFinite() || remainder < 0 || remainder >= 1)
+                throw InputFailure("data-error")
         }
     }
 

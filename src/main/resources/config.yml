@@ -42,6 +42,54 @@ formats:
         name: 'Blocks Mined'
         icon: '%nexo_pickaxe%'
         fallback-icon: '⛏'
+      distance_flown:
+        name: 'Distance Flown'
+        icon: ''
+        fallback-icon: '✈'
+      distance_walked:
+        name: 'Distance Walked'
+        icon: ''
+        fallback-icon: '➜'
+      shields_disabled:
+        name: 'Shields Disabled'
+        icon: ''
+        fallback-icon: '⚒'
+      times_fished:
+        name: 'Times Fished'
+        icon: ''
+        fallback-icon: '⌁'
+      portals_ignited:
+        name: 'Portals Ignited'
+        icon: ''
+        fallback-icon: '✦'
+      times_lunged:
+        name: 'Times Lunged'
+        icon: ''
+        fallback-icon: '➤'
+      arrows_shot:
+        name: 'Arrows Shot'
+        icon: ''
+        fallback-icon: '➹'
+      times_riptided:
+        name: 'Times Riptided'
+        icon: ''
+        fallback-icon: '≈'
+      times_thrown:
+        name: 'Times Thrown'
+        icon: ''
+        fallback-icon: '➚'
+      land_tilled:
+        name: 'Land Tilled'
+        icon: ''
+        fallback-icon: '▤'
+      sheep_sheared:
+        name: 'Sheep Sheared'
+        icon: ''
+        fallback-icon: '✂'
+      times_sifted:
+        name: 'Times Sifted'
+        icon: ''
+        fallback-icon: '◇'
 
 messages:
   no-permission: '<red>You do not have permission to do that.'
@@ -56,16 +104,18 @@ messages:
   already-signed: '<red>This item is already signed by %player%.'
   tracker-applied: '<green>Tracker %stat_name% applied!'
   tracker-already-exists: '<red>This item already has a tracker.'
+  tracker-wrong-item: '<red>This tracker requires an item of type %item_type%.'
+  tracker-unavailable: '<red>This tracker requires a server version with native spear lunge events.'
   tracker-removal-disabled: '<red>Tracker removal is disabled on this server.'
   tracker-missing: '<red>This item has no tracker.'
   tracker-not-owner: '<red>Only the player who applied this tracker can remove it. Older trackers without a placer record cannot be removed.'
   tracker-removed: '<green>Tracker removed. Its recorded count has been discarded.'
-  invalid-stat: '<red>Choose player_kills, mob_kills, or blocks_broken.'
+  invalid-stat: '<red>Choose a tracker with /track and tab completion while holding its matching item.'
   data-error: '<red>This item has unsupported or damaged EnthusiaSignature data. Ask an administrator.'
   reloaded: '<green>EnthusiaSignature configuration reloaded.'
   reload-failed: '<red>Invalid configuration; previous settings remain active. Check the server log.'
   sign-usage: '<yellow>/sign [--color red or #RRGGBB] [message] | confirm | cancel'
-  help: '<yellow>/sign [message], /sign confirm, /sign cancel, /track <player_kills|mob_kills|blocks_broken>'
+  help: '<yellow>/sign [message], /sign confirm, /sign cancel, /track <stat> (tab to see available trackers)'
 
   sign-warning: '<yellow>Signing is a one-time action and cannot be changed. Review your signature below, then use /sign confirm within 30 seconds, or /sign cancel.'
   sign-no-pending: '<red>No pending signature, or it expired. Use /sign [message] first.'

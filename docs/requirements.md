@@ -81,3 +81,18 @@ WHEN player kill protection is enabled THE SYSTEM SHALL count at most one eligib
 
 ### REQ-026 - Short admin aliases
 WHEN a sender uses /esign or /enthusiasign THE SYSTEM SHALL route to the existing EnthusiaSignature admin command with unchanged permission checks.
+
+### REQ-027 - Item-specific tracker types
+WHEN a player attaches one of the twelve equipment trackers THE SYSTEM SHALL enforce its matching material family and individual permission, preserve all existing tracker semantics, and reject counter updates after material substitution.
+
+
+### REQ-028 - Successful equipment actions
+WHEN an eligible equipment action succeeds THE SYSTEM SHALL credit only its identified item for each arrow fired, caught fishing item, sheep sheared, shield disabled, riptide, thrown trident, completed portal ignition, farmland conversion or completed suspicious-block brushing while excluding cancellations, nonmatching actions and excluded creative players.
+
+
+### REQ-029 - Equipped travel counters
+WHEN a noncancelled eligible move occurs THE SYSTEM SHALL add horizontal on-foot ground distance to worn boots or three-dimensional gliding distance to worn elytra in persistent centimeters with fractional carry and meter display, excluding teleports, world changes, riding and non-gliding flight and saturating without overflow.
+
+
+### REQ-030 - Native spear lunge support
+WHEN a runtime supplies Paper's native spear lunge event THE SYSTEM SHALL count noncancelled positive-power player lunges on the actively used spear; IF the event is unavailable THEN THE SYSTEM SHALL keep the plugin operational and reject command attachment of that unavailable tracker with a clear message.

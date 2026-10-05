@@ -35,7 +35,7 @@ class LoreRepairTest {
 
     @Test fun `normalized item components never duplicate signature or tracker on update`() {
         for (stat in Stat.entries) {
-            item = ItemStack(Material.DIAMOND_SWORD)
+            item = ItemStack(Material.entries.first { !it.isLegacy && it.isItem && !it.isAir && stat.accepts(it.name) })
             seed("Old lore")
             service.sign(player, item, listOf("A keepsake"))
             service.track(player, item, stat)

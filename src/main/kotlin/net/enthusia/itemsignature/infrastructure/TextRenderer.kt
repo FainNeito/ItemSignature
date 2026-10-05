@@ -126,7 +126,7 @@ class TextRenderer(private val settings: Settings, private val glyphs: GlyphReso
             Component.text(settings.yaml.getString("$path.fallback-icon", "")!!) else icon
         return template(settings.format("tracking.stat-line"), mapOf(
             "nexo_stat_icon" to effectiveIcon, "stat_name" to Component.text(settings.statName(stat)),
-            "stat_value" to Component.text(value.toString())))
+            "stat_value" to Component.text(if (stat.distance) java.math.BigDecimal.valueOf(value, 2).toPlainString() + " m" else value.toString())))
     }
 
     private fun permission(player: Player, node: String) {
