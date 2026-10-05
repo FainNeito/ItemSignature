@@ -185,3 +185,18 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
   - Existing plugin.yml/config.yml define permission and message schemas; pom.xml and build.yml define the canonical Maven artifact path. No behavioral proof/engine applies to these metadata/documentation edits.
   - Behavioral implementation has explicit TDD-011 through TDD-014 red/green evidence. Public Paper API contracts and current main are verified in those tasks.
   Validation: canonical offline Maven clean verify passed all 77 tests, zero failures/errors/skips, including LayerRulesTest. EARS and whitespace checks passed; shaded 1.3.0 JAR contains the three new adapters and excludes the native-event test fixture. SHA-256 819e636f1d93e303891b72ea4bba2a5f51c8054364296e465b3f47fc1c20315f. This is an unmerged local test artifact; no deployment or client acceptance is claimed.
+
+- [x] **INFRA-003** - Prepare Halloween Nexo assets and signature usage with guild exclusion.
+  Tag: INFRA
+  References: REQ-010, REQ-031; docs/implementation.md#infrastructure
+  Acceptance: Import fifteen byte-identical textures; reject glyph IDs, placeholders, Unicode and paths already present in fresh Nexo inputs; explicitly set is_emoji false; preserve all existing pack entries and font providers.
+  Evidence:
+  - Supplied HalloweenIcons bundle: content/nexo/Nexo/glyphs/crystal_creations/halloween_icons.yml and fifteen matching PNG textures (height 9, ascent 8).
+  - Nexo official glyph/PAPI documentation: https://docs.nexomc.com/compatibility/placeholderapi and https://docs.nexomc.com/configuration/glyphs.
+  - Existing TextRenderer.kt glyphToken/template and NexoBridge.resolve enforce per-player glyph permission independently of the emoji flag.
+  - LumaGuilds NexoEmojiService.resolveEmoji and doesEmojiExist filter isEmoji; no guild permission/config/data changes are needed.
+  - Fresh SMP Nexo pack and all five glyph catalogs downloaded read-only on 2026-10-05 for collision validation.
+  - Importer uses Python stdlib argparse, hashlib, json, struct, pathlib, zipfile plus PyYAML safe loading with duplicate-key rejection. No runtime plugin imports are introduced.
+  Routing: INFRA; no plugin behavior is changed, so behavioral prove/engine phases do not apply. Real negative collision exercises and full existing plugin verification remain required.
+
+  Validation: 77 existing Maven tests pass (0 failures/errors/skips); 9 synthetic importer checks pass; EARS and git diff whitespace checks pass. Fresh production snapshot produces 15 byte-identical textures, preserves 1043 non-font entries and all existing font providers. Installed ItemSignature 1.1.0 bytecode confirms token syntax and Nexo permission checks; installed LumaGuilds 3.0.20 confirms non-emoji rejection, and Nexo 1.28 reads explicit is_emoji false. Source is prepared for review; no production write, regeneration or client acceptance is claimed.

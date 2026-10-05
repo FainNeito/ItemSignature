@@ -16,6 +16,11 @@ jobs:
         with:
           node-version: '22'
       - run: node tools/spear/ears.mjs docs/requirements.md
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r resourcepack/halloween/requirements.txt
+      - run: python -m unittest discover -s tools/resourcepack -p 'test_*.py' -v
       - run: bash ./mvnw -B -ntp clean verify
       - uses: actions/upload-artifact@v4
         with:

@@ -96,3 +96,6 @@ WHEN a noncancelled eligible move occurs THE SYSTEM SHALL add horizontal on-foot
 
 ### REQ-030 - Native spear lunge support
 WHEN a runtime supplies Paper's native spear lunge event THE SYSTEM SHALL count noncancelled positive-power player lunges on the actively used spear; IF the event is unavailable THEN THE SYSTEM SHALL keep the plugin operational and reject command attachment of that unavailable tracker with a clear message.
+
+### REQ-031 - Halloween glyph installation
+WHEN the supplied Halloween icon bundle is prepared for installation THE SYSTEM SHALL preserve its fifteen textures, validate new glyph IDs, placeholders, characters and asset paths against the supplied current Nexo configuration and generated pack, provide permission-checked signature tokens, and explicitly exclude every new glyph from guild emoji selection.
