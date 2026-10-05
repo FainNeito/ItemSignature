@@ -81,3 +81,7 @@ WHEN player kill protection is enabled THE SYSTEM SHALL count at most one eligib
 
 ### REQ-026 - Short admin aliases
 WHEN a sender uses /esign or /enthusiasign THE SYSTEM SHALL route to the existing EnthusiaSignature admin command with unchanged permission checks.
+
+### REQ-027 - Item-specific tracker types
+WHEN a player attaches one of the twelve equipment trackers THE SYSTEM SHALL enforce its matching material family and individual permission, preserve all existing tracker semantics, and reject counter updates after material substitution.
+

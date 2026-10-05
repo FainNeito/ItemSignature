@@ -127,3 +127,13 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
   - Current plugin.yml defines the admin command; Bukkit command aliases use the standard aliases list in that same schema. No new imports.
   - Current pom.xml and build.yml define the artifact version and CI upload path; README and TESTING describe installation and server acceptance.
   Validation: clean verify passed 60 tests and produced EnthusiaSignature-1.2.0.jar; focused branding tests verify both aliases; EARS, diff whitespace and layer gates passed. Live server acceptance remains in TESTING.md.
+
+- [x] **TDD-011** - Add twelve item-bound tracker types.
+  Tag: TDD
+  References: REQ-027; docs/implementation.md#domain
+  Acceptance: SpecificTrackerTest covers all IDs, material variants, attachment and increment guards, permissions and old unrestricted IDs.
+  Evidence:
+  - Existing domain.Stat, infrastructure.ItemService and SpecificTrackerTest reuse baseline imports and persistence boundaries.
+  - Local Paper 1.21.11 API javap org.bukkit.Material confirms copper and other boot/axe/hoe/spear variants, ELYTRA, FISHING_ROD, FLINT_AND_STEEL, BOW, CROSSBOW, TRIDENT, SHEARS, BRUSH.
+  - No new import paths; item family policy is framework-free string matching in domain.
+  Validation: specific-red.log contains two missing-ID assertion failures; clean verify passes 62 tests including architecture. Lore normalization coverage now chooses an eligible item for each tracker.

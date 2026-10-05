@@ -56,6 +56,7 @@ messages:
   already-signed: '<red>This item is already signed by %player%.'
   tracker-applied: '<green>Tracker %stat_name% applied!'
   tracker-already-exists: '<red>This item already has a tracker.'
+  tracker-wrong-item: '<red>This tracker requires an item of type %item_type%.'
   tracker-removal-disabled: '<red>Tracker removal is disabled on this server.'
   tracker-missing: '<red>This item has no tracker.'
   tracker-not-owner: '<red>Only the player who applied this tracker can remove it. Older trackers without a placer record cannot be removed.'

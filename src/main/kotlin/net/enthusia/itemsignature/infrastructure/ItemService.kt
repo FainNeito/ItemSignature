@@ -67,6 +67,7 @@ class ItemService(val settings: Settings, val renderer: TextRenderer, private va
         permission(player, "track.${stat.id}")
         val meta = meta(item)
         if (ItemData.string(meta, "stat") != null) throw InputFailure("tracker-already-exists")
+        if (!stat.accepts(item.type.name)) throw InputFailure("tracker-wrong-item", mapOf("item_type" to stat.itemFamily.orEmpty()))
         val editable = ItemData.editable(meta)
         ItemData.set(meta, "stat", stat.id)
         ItemData.set(meta, "value", 0L)
@@ -89,6 +90,7 @@ class ItemService(val settings: Settings, val renderer: TextRenderer, private va
     }
 
     fun increment(item: ItemStack, stat: Stat): Boolean {
+        if (!stat.accepts(item.type.name)) return false
         if (item.type.isAir || !item.hasItemMeta()) return false
         val raw = item.itemMeta ?: return false
         if (ItemData.protected(raw) || item.amount != 1 || ItemData.string(raw, "stat") != stat.id) return false
