@@ -89,3 +89,7 @@ WHEN a player attaches one of the twelve equipment trackers THE SYSTEM SHALL enf
 ### REQ-028 - Successful equipment actions
 WHEN an eligible equipment action succeeds THE SYSTEM SHALL credit only its identified item for each arrow fired, caught fishing item, sheep sheared, shield disabled, riptide, thrown trident, completed portal ignition, farmland conversion or completed suspicious-block brushing while excluding cancellations, nonmatching actions and excluded creative players.
 
+
+### REQ-029 - Equipped travel counters
+WHEN a noncancelled eligible move occurs THE SYSTEM SHALL add horizontal on-foot ground distance to worn boots or three-dimensional gliding distance to worn elytra in persistent centimeters with fractional carry and meter display, excluding teleports, world changes, riding and non-gliding flight and saturating without overflow.
+

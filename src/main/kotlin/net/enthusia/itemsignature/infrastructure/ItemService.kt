@@ -84,7 +84,7 @@ class ItemService(val settings: Settings, val renderer: TextRenderer, private va
         if (ItemData.string(meta, "stat") == null) throw InputFailure("tracker-missing")
         if (ItemData.string(meta, "tracker_owner") != player.uniqueId.toString()) throw InputFailure("tracker-not-owner")
         val editable = ItemData.editable(meta)
-        listOf("stat", "value", "tracker_id", "tracker_owner").forEach { meta.persistentDataContainer.remove(ItemData.key(it)) }
+        listOf("stat", "value", "tracker_id", "tracker_owner", "distance_remainder").forEach { meta.persistentDataContainer.remove(ItemData.key(it)) }
         ItemData.redraw(meta, editable, renderer)
         item.itemMeta = meta
     }
@@ -101,6 +101,27 @@ class ItemService(val settings: Settings, val renderer: TextRenderer, private va
         val editable = ItemData.editable(meta)
         ItemData.set(meta, "value", nextValue)
         ItemData.redraw(meta, editable, renderer)
+        item.itemMeta = meta
+        return true
+    }
+
+    fun incrementDistance(item: ItemStack, stat: Stat, meters: Double): Boolean {
+        if (!stat.distance || !meters.isFinite() || meters <= 0 || !stat.accepts(item.type.name) || !item.hasItemMeta()) return false
+        val raw = item.itemMeta ?: return false
+        if (ItemData.protected(raw) || item.amount != 1 || ItemData.string(raw, "stat") != stat.id) return false
+        val meta = meta(item)
+        val previous = ItemData.number(meta, "value") ?: throw InputFailure("data-error")
+        if (previous == Long.MAX_VALUE) return false
+        val centimeters = meters * 100 + (ItemData.decimal(meta, "distance_remainder") ?: 0.0)
+        if (!centimeters.isFinite()) return false
+        val whole = kotlin.math.floor(centimeters + 1e-9).toLong()
+        val next = CustomizationPolicy.nextCounter(previous, whole)
+        ItemData.set(meta, "distance_remainder", if (next == Long.MAX_VALUE) 0.0 else (centimeters - whole).coerceIn(0.0, 0.999999999))
+        if (next != previous) {
+            val editable = ItemData.editable(meta)
+            ItemData.set(meta, "value", next)
+            ItemData.redraw(meta, editable, renderer)
+        }
         item.itemMeta = meta
         return true
     }

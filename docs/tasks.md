@@ -150,3 +150,16 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
 
   Import evidence: local Paper API also verifies org.bukkit.entity.AbstractArrow, org.bukkit.entity.Player, org.bukkit.entity.Sheep, org.bukkit.entity.Trident, org.bukkit.event.Event, org.bukkit.GameMode, org.bukkit.Material, org.bukkit.event.EventHandler, org.bukkit.event.EventPriority, org.bukkit.event.Listener. Internal Stat/ItemService imports retain existing contracts.
   Validation: action-red.log records nine action-counter failures with no fixture errors; clean verify passes 71 tests including architecture after implementation.
+
+- [x] **TDD-013** - Persist distance on worn equipment.
+  Tag: TDD
+  References: REQ-029; docs/implementation.md#application
+  Acceptance: DistanceTrackerTest covers worn slots, gliding/ground separation, fractional carry, meter display, teleport/cancellation/riding/creative exclusions and bulk saturation.
+  Evidence:
+  - Local Paper API verifies org.bukkit.event.player.PlayerMoveEvent and org.bukkit.event.player.PlayerTeleportEvent, org.bukkit.inventory.EquipmentSlot.FEET/CHEST and PlayerInventory.getItem/setItem.
+  - PlayerStatisticIncrementEvent documentation explicitly excludes movement statistics: use move coordinates instead of assuming stat events fire.
+  - Existing ItemData LONG counters and CustomizationPolicy.nextCounter provide persistence and saturation; JDK double math and PersistentDataType.DOUBLE store fractional centimeters.
+  - Tests reuse existing org.bukkit.*, org.junit.jupiter.api.*, org.mockito.Mockito.* and infrastructure/domain imports; fully qualified Adventure plain serializer already appears in lore tests.
+
+  Import evidence: DistanceTrackingListener reuses net.enthusia.itemsignature.domain.Stat, org.bukkit.GameMode, org.bukkit.event.EventHandler, org.bukkit.event.EventPriority, org.bukkit.event.Listener and verified move/slot APIs above; java.math.BigDecimal is JDK meter formatting with no new library.
+  Validation: distance-red.log records ground/gliding and fractional counter failures; clean verify passes 74 tests including architecture, saturation and exclusions after implementation.
