@@ -1,0 +1,38 @@
+Source: .tools/verification/specific-red.log
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 1.776 s <<< FAILURE! -- in net.enthusia.itemsignature.SpecificTrackerTest
+org.opentest4j.AssertionFailedError: expected: not <null>
+[ERROR]   SpecificTrackerTest.new trackers bind to matching materials with permissions and persistent counters:25 expected: not <null>
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0
+Source: .tools/verification/action-red.log
+[ERROR] Tests run: 9, Failures: 9, Errors: 0, Skipped: 0, Time elapsed: 3.020 s <<< FAILURE! -- in net.enthusia.itemsignature.EquipmentActionTest
+org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
+org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
+org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
+org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
+org.opentest4j.AssertionFailedError: expected: <3> but was: <0>
+org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
+org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
+org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
+org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
+[ERROR]   EquipmentActionTest.arrows count projectiles on the firing bow and exclude cancelled and firework shots:49 expected: <3> but was: <0>
+[ERROR]   EquipmentActionTest.brush counts completed suspicious blocks not intermediate dust stages:139 expected: <1> but was: <0>
+[ERROR]   EquipmentActionTest.fishing counts caught items not casts entities bites or cancelled catches:62 expected: <1> but was: <0>
+[ERROR]   EquipmentActionTest.portal creation counts one ignition not individual fire blocks or destination generation:155 expected: <1> but was: <0>
+[ERROR]   EquipmentActionTest.riptide credits used trident once with cancellation and creative exclusions:90 expected: <1> but was: <0>
+[ERROR]   EquipmentActionTest.shearing counts sheep only using the event hand:71 expected: <1> but was: <0>
+[ERROR]   EquipmentActionTest.shield disables credit the attacking axe only for enabled cooldowns:80 expected: <1> but was: <0>
+[ERROR]   EquipmentActionTest.thrown trident counter follows its pickup stack after vanilla replaces that stack:107 expected: <1> but was: <0>
+[ERROR]   EquipmentActionTest.tilling waits for farmland and retains attribution after slot changes:129 expected: <1> but was: <0>
+[ERROR] Tests run: 9, Failures: 9, Errors: 0, Skipped: 0
+Source: .tools/verification/distance-red.log
+[ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 3.193 s <<< FAILURE! -- in net.enthusia.itemsignature.DistanceTrackerTest
+org.opentest4j.AssertionFailedError: expected: <4> but was: <0>
+org.opentest4j.AssertionFailedError: expected: <500> but was: <0>
+[ERROR]   DistanceTrackerTest.boots count horizontal ground distance and elytra counts three dimensional gliding distance:44 expected: <500> but was: <0>
+[ERROR]   DistanceTrackerTest.subcentimeter distances accumulate on the item without duplicating lore:74 expected: <4> but was: <0>
+[ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0
+Source: .tools/verification/lunge-red.log
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 2.952 s <<< FAILURE! -- in net.enthusia.itemsignature.LungeTrackerTest
+org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
+[ERROR]   LungeTrackerTest.native spear lunge credits the used spear only and ignores cancellation and zero power:31 expected: <1> but was: <0>
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0

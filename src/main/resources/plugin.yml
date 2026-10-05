@@ -11,7 +11,7 @@ commands:
     usage: '/sign [--color <red or #RRGGBB>] [message] | confirm | cancel'
   track:
     description: Attach a stat tracker or remove your own tracker when enabled.
-    usage: /track <player_kills|mob_kills|blocks_broken|remove>
+    usage: /track <stat|remove>
   itemsignature:
     description: Legacy command to show help or reload configuration.
     usage: /itemsignature [reload]
@@ -42,3 +42,27 @@ permissions:
     default: op
   itemsignature.track.remove:
     default: true
+  itemsignature.track.distance_flown:
+    default: false
+  itemsignature.track.distance_walked:
+    default: false
+  itemsignature.track.shields_disabled:
+    default: false
+  itemsignature.track.times_fished:
+    default: false
+  itemsignature.track.portals_ignited:
+    default: false
+  itemsignature.track.times_lunged:
+    default: false
+  itemsignature.track.arrows_shot:
+    default: false
+  itemsignature.track.times_riptided:
+    default: false
+  itemsignature.track.times_thrown:
+    default: false
+  itemsignature.track.land_tilled:
+    default: false
+  itemsignature.track.sheep_sheared:
+    default: false
+  itemsignature.track.times_sifted:
+    default: false

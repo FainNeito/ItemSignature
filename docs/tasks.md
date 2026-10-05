@@ -176,3 +176,12 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
 
   Import evidence: LungeTrackingBridge uses existing net.enthusia.itemsignature.domain.Stat, org.bukkit.GameMode, org.bukkit.entity.Player, org.bukkit.event.EventPriority, org.bukkit.event.Listener, org.bukkit.plugin.java.JavaPlugin and the Cancellable/EntityEvent/EquipmentSlot contracts verified above.
   Validation: lunge-red.log records a native-event counter failure; focused discovery/command gating and full clean verify pass 77 tests including architecture. javap confirms the actual 26.2 build 124 native event binary contract; no live server/client proof is claimed.
+
+- [x] **INFRA-002** - Package and document item-specific trackers.
+  Tag: INFRA
+  References: REQ-027, REQ-028, REQ-029, REQ-030; docs/implementation.md#infrastructure
+  Acceptance: twelve permission nodes and default labels are shipped, versioned artifact/CI match, commands and runtime limits are documented, canonical current base is checked and reviewable PR delivery is prepared.
+  Evidence:
+  - Existing plugin.yml/config.yml define permission and message schemas; pom.xml and build.yml define the canonical Maven artifact path. No behavioral proof/engine applies to these metadata/documentation edits.
+  - Behavioral implementation has explicit TDD-011 through TDD-014 red/green evidence. Public Paper API contracts and current main are verified in those tasks.
+  Validation: canonical offline Maven clean verify passed all 77 tests, zero failures/errors/skips, including LayerRulesTest. EARS and whitespace checks passed; shaded 1.3.0 JAR contains the three new adapters and excludes the native-event test fixture. SHA-256 819e636f1d93e303891b72ea4bba2a5f51c8054364296e465b3f47fc1c20315f. This is an unmerged local test artifact; no deployment or client acceptance is claimed.

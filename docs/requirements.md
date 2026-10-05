@@ -96,4 +96,3 @@ WHEN a noncancelled eligible move occurs THE SYSTEM SHALL add horizontal on-foot
 
 ### REQ-030 - Native spear lunge support
 WHEN a runtime supplies Paper's native spear lunge event THE SYSTEM SHALL count noncancelled positive-power player lunges on the actively used spear; IF the event is unavailable THEN THE SYSTEM SHALL keep the plugin operational and reject command attachment of that unavailable tracker with a clear message.
-

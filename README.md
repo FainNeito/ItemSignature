@@ -4,7 +4,7 @@ Kotlin plugin for **Paper/Leaf 1.21.11, Java 21+**. Adds confirmed permanent cre
 
 ## Install
 
-1. Put `target/EnthusiaSignature-1.2.0.jar` in your server's `plugins` folder. Replace the previous plugin JAR first; never run multiple builds together. Do not use the `original-` JAR.
+1. Put the merged release `EnthusiaSignature-1.3.0.jar` in your server's `plugins` folder. Replace the previous plugin JAR first; never run multiple builds together. Do not use the `original-` JAR. Feature-branch JARs are local test artifacts until merged.
 2. Restart the server. On first startup, an existing `plugins/ItemSignature/config.yml` is copied to `plugins/EnthusiaSignature/config.yml` if the new file is absent. The old file remains untouched. Edit the new file and use `/enthusiasignature reload`.
 3. Optionally install Nexo and distribute its resource pack. Configure the glyph IDs below to match your pack.
 
@@ -33,6 +33,33 @@ Each item supports one tracker. Once attached, it continues counting when the it
 Tracker removal is disabled by default. Enable `settings.tracking.allow-removal: true` and reload with `/esign reload` to allow `/track remove`. It requires `itemsignature.track.remove` (granted by default) and the recorded UUID of the player who applied the tracker. Trading an item does not transfer removal rights. Trackers created before 1.2.0 have no placer record and cannot be removed by this command. Removal discards the count and tracker identity, preserves the signature and unrelated lore/metadata, and permits attaching a fresh tracker starting at zero. Diary items remain protected.
 
 Player kill anti-farming is enabled by default under `settings.tracking.player-kills.anti-farming.enabled`. `cooldown-seconds` defaults to 300 and accepts 1–86400. Only one successfully credited kill per killer/victim pair counts during that interval, shared across swords and tracked bow/crossbow projectiles. Blocked kills do not extend the interval; untracked kills do not start it. Different victims and killers have independent intervals. Set `enabled: false` to count every eligible kill. Cooldowns are held in memory, survive configuration reloads, and reset on restart; stored item counters remain persistent. Mob and block counters are unaffected.
+
+## Equipment trackers
+
+Use `/track <id>` while holding a single matching item. Each new tracker requires `itemsignature.track.<id>` (default false). Tab completion filters by permissions, held item and runtime availability. The original three generic trackers remain unrestricted. One tracker per item and the existing owner-only removal settings still apply.
+
+| ID | Required item | Counted action |
+| --- | --- | --- |
+| `distance_flown` | Elytra | Three-dimensional distance while worn in the chest slot and gliding |
+| `distance_walked` | Boots, any material | Horizontal distance while worn in the feet slot and walking/running/crouching on ground |
+| `shields_disabled` | Axe, any material | A player shield disabled by the axe holder, with a positive cooldown |
+| `times_fished` | Fishing rod | Successful caught-item retrievals, including fishing treasure/junk; excludes casts, bites and hooked entities |
+| `portals_ignited` | Flint and steel | One player-initiated nether portal ignition, rather than every portal/fire block |
+| `times_lunged` | Spear, any material | Positive-power, noncancelled native spear lunges |
+| `arrows_shot` | Bow or crossbow | Each arrow fired; multishot counts each arrow, firework shots are excluded |
+| `times_riptided` | Trident | Successful riptide activations |
+| `times_thrown` | Trident | Valid launched tridents; the count follows the projectile's pickup item |
+| `land_tilled` | Hoe, any material | Allowed use that converts dirt/grass/path into farmland; coarse/rooted-dirt clearing does not count |
+| `sheep_sheared` | Shears | Successful sheep shearing; other shearable entities are excluded |
+| `times_sifted` | Brush | Completed suspicious sand/gravel brushing; intermediate dust stages do not count |
+
+Distance counters store whole centimeters and fractional carry on the equipment, display meters with two decimal places, and exclude teleports, world changes, riding and non-gliding flight. The boots tracker measures ground travel, not swimming, falling or jumping. Held-but-unworn equipment does not accumulate distance. Existing creative exclusions and Diary protection apply to every new tracker. Transfers retain counters and the original placer record; automatic counting does not require attachment permissions.
+
+Lunge tracking requires a runtime providing `io.papermc.paper.event.entity.EntityLungeEvent`, verified in Paper 26.2 build 124 and 26.3 build 8 APIs. Paper 1.21.11 lacks that event: the plugin continues operating, but `/track times_lunged` gives an unavailable message and omits the choice from completion. Existing lunge-tagged items are preserved for use on supported runtimes. No lunges are inferred from attack clicks or durability.
+
+Hand-bearing events identify their actual tool; actions without a hand use an unambiguous held item. Brushing while holding two brushes is not credited because the older event does not identify which hand brushed. Portal tracking requires the initiating flint-and-steel interaction. Delayed till/trident updates verify the same tracker identity before writing. Dropped or ambiguous duplicate tracker identities are not redirected to another tool.
+
+Names, icons and fallback icons for all trackers are configurable under `formats.tracking.stat-names`. Set each new `icon` to your pack's `%nexo_<glyph>%` if desired; defaults use text symbols without requiring invented pack glyph IDs. Old configurations inherit the new defaults without changing existing customized options.
 
 ## Permissions and ranks
 
@@ -131,4 +158,3 @@ Creative-mode tracking remains disabled by default; enable `settings.tracking.co
 ## Updating to 1.1.1 (EnthusiaSignature)
 
 Remove the old ItemSignature JAR and install `EnthusiaSignature-1.1.1.jar`. Keep a backup of the old `plugins/ItemSignature` directory. On startup, the old configuration is copied only if `plugins/EnthusiaSignature/config.yml` does not already exist; a copy failure disables the plugin instead of silently replacing settings with defaults. The previous directory is never deleted. Existing item data stays under `itemsignature:*`, and all `itemsignature.*` permissions remain valid. The old `/itemsignature` command remains available beside `/enthusiasignature`.
-
