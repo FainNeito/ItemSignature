@@ -60,6 +60,7 @@ class ImportChecks(unittest.TestCase):
             self.assertTrue(all(g['is_emoji'] is False for g in mapping.values()))
             self.assertEqual(15, len({g['char'] for g in mapping.values()}))
             for glyph_id, glyph in mapping.items():
+                self.assertEqual('nexo:default', glyph['font'])
                 self.assertEqual([':' + glyph_id + ':'], glyph['placeholders'])
                 self.assertTrue(glyph['permission'].startswith('enthusia.glyph.halloween.'))
             for icon in ICONS:

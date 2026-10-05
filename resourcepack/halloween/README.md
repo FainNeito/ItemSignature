@@ -10,6 +10,8 @@ text glyphs need no custom model data or item registrations.
 The importer requires the purchased bundle, a fresh generated Nexo `pack.zip`,
 and a complete copy of `plugins/Nexo/glyphs`. It refuses ID, placeholder,
 character and texture path collisions before creating an installation ZIP.
+The glyph font is explicitly `nexo:default` so server default-font settings cannot
+change the generated mapping or signature rendering.
 Keep the licensed textures and generated ZIPs outside Git.
 
 ```text

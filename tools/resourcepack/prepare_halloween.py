@@ -115,7 +115,7 @@ def prepare(bundle, server_pack, glyph_dir, output):
             additions[path] = raw
             dimensions[path] = {'width': width, 'height': height}
             mapping[glyph_id] = {
-                'texture': texture, 'height': 9, 'ascent': 8, 'char': char,
+                'texture': texture, 'font': 'nexo:default', 'height': 9, 'ascent': 8, 'char': char,
                 'is_emoji': False, 'placeholders': [token],
                 'permission': 'enthusia.glyph.halloween.' + icon,
             }
