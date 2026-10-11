@@ -120,7 +120,8 @@ open class ItemSignaturePlugin : JavaPlugin() {
 
     private fun message(sender: CommandSender, key: String, values: Map<String, String> = emptyMap()) {
         val yaml = service.settings.yaml
-        val raw = yaml.getString("settings.prefix", "")!! + yaml.getString("messages.$key", key)!!
+        // getString(path, def) ignores the packaged defaults, so messages added after a config was written would show their key.
+        val raw = (yaml.getString("settings.prefix") ?: "") + (yaml.getString("messages.$key") ?: key)
         sender.sendMessage(service.renderer.template(raw, values.mapValues { Component.text(it.value) }))
     }
 

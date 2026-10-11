@@ -4,7 +4,7 @@ Kotlin plugin for **Paper/Leaf 1.21.11, Java 21+**. Adds confirmed permanent cre
 
 ## Install
 
-1. Put the merged release `EnthusiaSignature-1.3.1.jar` in your server's `plugins` folder. Replace the previous plugin JAR first; never run multiple builds together. Do not use the `original-` JAR. Feature-branch JARs are local test artifacts until merged.
+1. Put the merged release `EnthusiaSignature-1.3.2.jar` in your server's `plugins` folder. Replace the previous plugin JAR first; never run multiple builds together. Do not use the `original-` JAR. Feature-branch JARs are local test artifacts until merged.
 2. Restart the server. On first startup, an existing `plugins/ItemSignature/config.yml` is copied to `plugins/EnthusiaSignature/config.yml` if the new file is absent. The old file remains untouched. Edit the new file and use `/enthusiasignature reload`.
 3. Optionally install Nexo and distribute its resource pack. Configure the glyph IDs below to match your pack.
 
