@@ -105,3 +105,6 @@ IF an item contains the enthusiasignature:locked marker THEN THE SYSTEM SHALL re
 
 ### REQ-033 - Packaged message and label defaults
 WHEN a message, tracker name or tracker icon is absent from an existing configuration THE SYSTEM SHALL use the packaged default text instead of the raw key or an empty value.
+
+### REQ-034 - Locked-item signing permission
+WHERE a player has the itemsignature.sign.locked permission THE SYSTEM SHALL allow that player to sign an item carrying the enthusiasignature:locked marker, while tracker attachment, removal and automatic counters on that item remain rejected.

@@ -1,0 +1,4 @@
+[ERROR] Tests run: 31, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 4.478 s <<< FAILURE! -- in net.enthusia.itemsignature.ItemSignatureTest
+[ERROR] Tests run: 31, Failures: 0, Errors: 1, Skipped: 0
+net.enthusia.itemsignature.ItemSignatureTest.locked-sign permission allows signing a locked item but never tracking it -- Time elapsed: 3.566 s <<< ERROR!
+net.enthusia.itemsignature.infrastructure.InputFailure: locked-item

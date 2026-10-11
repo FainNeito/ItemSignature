@@ -238,6 +238,18 @@ class ItemSignatureTest {
         assertEquals(170, service.settings.maxLength)
     }
 
+    @Test fun `locked-sign permission allows signing a locked item but never tracking it`() {
+        val meta = item.itemMeta!!
+        meta.persistentDataContainer.set(NamespacedKey("enthusiasignature", "locked"), Type.BOOLEAN, true)
+        item.itemMeta = meta
+        grant("sign.locked")
+        grant("track.blocks_broken")
+        service.sign(player, item, emptyList())
+        assertEquals(player.uniqueId.toString(), ItemData.string(item.itemMeta!!, "signer_uuid"))
+        failure("locked-item") { service.track(player, item, Stat.BLOCKS_BROKEN) }
+        assertFalse(service.increment(item, Stat.BLOCKS_BROKEN))
+    }
+
     @Test fun `messages missing from an older config fall back to the packaged text`() {
         val file = java.io.File(plugin.dataFolder, "config.yml")
         file.writeText(file.readLines().filterNot { it.trimStart().startsWith("locked-item:") }.joinToString("\n"))

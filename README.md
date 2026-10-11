@@ -4,7 +4,7 @@ Kotlin plugin for **Paper/Leaf 1.21.11, Java 21+**. Adds confirmed permanent cre
 
 ## Install
 
-1. Put the merged release `EnthusiaSignature-1.3.2.jar` in your server's `plugins` folder. Replace the previous plugin JAR first; never run multiple builds together. Do not use the `original-` JAR. Feature-branch JARs are local test artifacts until merged.
+1. Put the merged release `EnthusiaSignature-1.3.3.jar` in your server's `plugins` folder. Replace the previous plugin JAR first; never run multiple builds together. Do not use the `original-` JAR. Feature-branch JARs are local test artifacts until merged.
 2. Restart the server. On first startup, an existing `plugins/ItemSignature/config.yml` is copied to `plugins/EnthusiaSignature/config.yml` if the new file is absent. The old file remains untouched. Edit the new file and use `/enthusiasignature reload`.
 3. Optionally install Nexo and distribute its resource pack. Configure the glyph IDs below to match your pack.
 
@@ -74,6 +74,7 @@ Names, icons and fallback icons for all trackers are configurable under `formats
 | `itemsignature.track.mob_kills` | False | Attach mob trackers |
 | `itemsignature.track.blocks_broken` | False | Attach mining trackers |
 | `itemsignature.track.remove` | Everyone | Remove a tracker you applied when the config allows it |
+| `itemsignature.sign.locked` | False | Sign items carrying `enthusiasignature:locked` (e.g. the Crown of Sorrow); tracking them stays blocked |
 | `itemsignature.reload` | Operators | Reload settings |
 
 For example, with LuckPerms:
