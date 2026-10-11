@@ -4,7 +4,7 @@ Kotlin plugin for **Paper/Leaf 1.21.11, Java 21+**. Adds confirmed permanent cre
 
 ## Install
 
-1. Put the merged release `EnthusiaSignature-1.3.3.jar` in your server's `plugins` folder. Replace the previous plugin JAR first; never run multiple builds together. Do not use the `original-` JAR. Feature-branch JARs are local test artifacts until merged.
+1. Put the merged release `EnthusiaSignature-1.3.4.jar` in your server's `plugins` folder. Replace the previous plugin JAR first; never run multiple builds together. Do not use the `original-` JAR. Feature-branch JARs are local test artifacts until merged.
 2. Restart the server. On first startup, an existing `plugins/ItemSignature/config.yml` is copied to `plugins/EnthusiaSignature/config.yml` if the new file is absent. The old file remains untouched. Edit the new file and use `/enthusiasignature reload`.
 3. Optionally install Nexo and distribute its resource pack. Configure the glyph IDs below to match your pack.
 
@@ -67,7 +67,7 @@ Names, icons and fallback icons for all trackers are configurable under `formats
 | --- | --- | --- |
 | `itemsignature.sign` | Everyone | Basic signing |
 | `itemsignature.color` | False | MiniMessage named colors, e.g. `<red>`, and `<bold>`, `<italic>`, `<underlined>`, `<strikethrough>`, `<reset>` |
-| `itemsignature.hex` | False | `<#RRGGBB>`; includes standard color permission |
+| `itemsignature.hex` | False | `<#RRGGBB>` and `<gradient:#RRGGBB:#RRGGBB>` (2–8 hex stops); includes standard color permission |
 | `itemsignature.quote` | False | Custom italic signature quote |
 | `itemsignature.glyph` | False | Nexo glyph input; also requires the glyph's own Nexo permission |
 | `itemsignature.track.player_kills` | False | Attach PvP trackers |
@@ -92,7 +92,7 @@ Grant the corresponding Nexo glyph permission as configured in your pack. Animat
 
 ## Nexo formatting
 
-Supported glyph spellings are `:glyph_id:`, `%nexo_glyph_id%`, and `<glyph:glyph_id>`. The `%nexo_...%` spelling is resolved directly through Nexo's glyph API, so PlaceholderAPI is **not required**. Other PlaceholderAPI expansions are not evaluated. Player MiniMessage accepts named colors, hex colors, the listed decorations and glyphs. Events, arbitrary fonts, gradients, obfuscation and multiline tags are rejected. Colon syntax can be disabled independently.
+Supported glyph spellings are `:glyph_id:`, `%nexo_glyph_id%`, and `<glyph:glyph_id>`. The `%nexo_...%` spelling is resolved directly through Nexo's glyph API, so PlaceholderAPI is **not required**. Other PlaceholderAPI expansions are not evaluated. Player MiniMessage accepts named colors, hex colors, hex gradients (`<gradient:#c1ddf3:#82bae6>`, 2–8 stops, no phase argument), the listed decorations and glyphs. Events, arbitrary fonts, named-color gradient stops, obfuscation and multiline tags are rejected. Colon syntax can be disabled independently.
 
 Player text requires both EnthusiaSignature's glyph permission and Nexo's per-glyph permission. Raw private-use Unicode, Nexo-mapped glyph characters, section-sign formatting, control characters, obfuscation, and arbitrary MiniMessage tags are rejected. Use glyph tokens to preserve the glyph font and permission checks. Blacklist matching ignores case, color codes, spacing and punctuation, and applies Unicode compatibility normalization.
 

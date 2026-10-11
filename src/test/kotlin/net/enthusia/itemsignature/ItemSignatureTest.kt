@@ -156,6 +156,30 @@ class ItemSignatureTest {
         assertTrue(lore().any { it.contains("Remember me") })
     }
 
+    @Test fun `gradients render and are gated by the permissions of their color stops`() {
+        val text = "<b><gradient:#c1ddf3:#82bae6>Everlights"
+        failure("no-permission") { service.renderer.user(text, player) }
+        grant("color")
+        failure("no-permission") { service.renderer.user(text, player) }
+        grant("hex", "quote")
+        assertEquals("Ember", plain(service.renderer.user("<gradient:#ff0000:#ffaa00>Ember</gradient>", player)))
+        val component = service.renderer.user(text, player)
+        assertEquals("Everlights", plain(component))
+        val colors = mutableSetOf<String>()
+        fun walk(c: Component) { c.color()?.let { colors += it.asHexString() }; c.children().forEach(::walk) }
+        walk(component)
+        assertTrue(colors.size > 2, "gradient should color characters individually: " + colors)
+        service.sign(player, item, listOf("--color", "#82bae6", text))
+        assertTrue(lore().any { it.contains("Everlights") })
+    }
+
+    @ParameterizedTest @ValueSource(strings = ["<gradient>x", "<gradient:#ff0000>x", "<gradient:#ff0000:#00ff00:0.5>x",
+        "<gradient:#ff0000:nope>x", "<gradient:red:gold>x", "<gradient:#ff0000:#00ff00:#0000ff:#ff0000:#00ff00:#0000ff:#ff0000:#00ff00:#0000ff>x"])
+    fun `malformed gradients are rejected`(text: String) {
+        grant("color", "hex")
+        failure("invalid-text") { service.renderer.user(text, player) }
+    }
+
     @Test fun `glyph syntax routes only permitted IDs to resolver`() {
         val requested = mutableListOf<String>()
         val renderer = TextRenderer(service.settings) { id, _ -> requested += id; if (id == "sword") Component.text("SWORD") else null }
