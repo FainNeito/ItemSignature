@@ -13,7 +13,11 @@ object ItemData {
     fun key(name: String) = NamespacedKey("itemsignature", name)
     private val json = GsonComponentSerializer.gson()
     private val diaryKeys = listOf(NamespacedKey("diarykeeper", "is_diary"), NamespacedKey("diarykeeper", "diary_id"))
-    fun protected(meta: ItemMeta) = diaryKeys.any { meta.persistentDataContainer.has(it) }
+    /** Set by other plugins (e.g. on a one-of-a-kind lore item) to forbid every signature and tracker change. */
+    private val lockKey = NamespacedKey("enthusiasignature", "locked")
+    fun diary(meta: ItemMeta) = diaryKeys.any { meta.persistentDataContainer.has(it) }
+    fun locked(meta: ItemMeta) = meta.persistentDataContainer.has(lockKey)
+    fun protected(meta: ItemMeta) = diary(meta) || locked(meta)
 
     fun string(meta: ItemMeta, name: String): String? = read { meta.persistentDataContainer.get(key(name), Type.STRING) }
     fun number(meta: ItemMeta, name: String): Long? = read { meta.persistentDataContainer.get(key(name), Type.LONG) }

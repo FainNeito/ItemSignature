@@ -7,6 +7,7 @@ import net.enthusia.itemsignature.domain.MutationRejection
 object CustomizationPolicy {
     fun rejection(facts: ItemFacts): MutationRejection? = when {
         facts.isDiary -> MutationRejection.DIARY
+        facts.isLocked -> MutationRejection.LOCKED
         facts.amount != 1 -> MutationRejection.STACK
         else -> null
     }

@@ -22,8 +22,9 @@ class ItemService(val settings: Settings, val renderer: TextRenderer, private va
     private fun meta(item: ItemStack): ItemMeta {
         if (item.type.isAir || !item.type.isItem) throw InputFailure("invalid-item")
         val meta = item.itemMeta ?: throw InputFailure("invalid-item")
-        when (CustomizationPolicy.rejection(ItemFacts(ItemData.protected(meta), item.amount))) {
+        when (CustomizationPolicy.rejection(ItemFacts(ItemData.diary(meta), item.amount, ItemData.locked(meta)))) {
             MutationRejection.DIARY -> throw InputFailure("protected-item")
+            MutationRejection.LOCKED -> throw InputFailure("locked-item")
             MutationRejection.STACK -> throw InputFailure("stacked-item")
             null -> Unit
         }

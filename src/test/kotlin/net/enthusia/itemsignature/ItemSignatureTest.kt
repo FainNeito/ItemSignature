@@ -68,6 +68,19 @@ class ItemSignatureTest {
         assertEquals(before, item)
     }
 
+    @Test fun `signature lock marker rejects signing tracking and automatic counters`() {
+        val meta = item.itemMeta!!
+        meta.persistentDataContainer.set(NamespacedKey("enthusiasignature", "locked"), Type.BOOLEAN, true)
+        meta.lore(listOf(Component.text("A crown that weeps")))
+        item.itemMeta = meta
+        val before = item.clone()
+        grant("track.blocks_broken")
+        failure("locked-item") { service.sign(player, item, emptyList()) }
+        failure("locked-item") { service.track(player, item, Stat.BLOCKS_BROKEN) }
+        assertFalse(service.increment(item, Stat.BLOCKS_BROKEN))
+        assertEquals(before, item)
+    }
+
     @Test fun `EnthusiaLoreItems identity and custom metadata survive edits signing and stats`() {
         grant("track.mob_kills")
         val meta = item.itemMeta!!

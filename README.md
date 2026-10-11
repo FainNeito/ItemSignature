@@ -4,7 +4,7 @@ Kotlin plugin for **Paper/Leaf 1.21.11, Java 21+**. Adds confirmed permanent cre
 
 ## Install
 
-1. Put the merged release `EnthusiaSignature-1.3.0.jar` in your server's `plugins` folder. Replace the previous plugin JAR first; never run multiple builds together. Do not use the `original-` JAR. Feature-branch JARs are local test artifacts until merged.
+1. Put the merged release `EnthusiaSignature-1.3.1.jar` in your server's `plugins` folder. Replace the previous plugin JAR first; never run multiple builds together. Do not use the `original-` JAR. Feature-branch JARs are local test artifacts until merged.
 2. Restart the server. On first startup, an existing `plugins/ItemSignature/config.yml` is copied to `plugins/EnthusiaSignature/config.yml` if the new file is absent. The old file remains untouched. Edit the new file and use `/enthusiasignature reload`.
 3. Optionally install Nexo and distribute its resource pack. Configure the glyph IDs below to match your pack.
 
@@ -105,6 +105,8 @@ Inspected source snapshots:
 
 - [DiaryKeeper](https://github.com/wsg138/DiaryKeeper/tree/137327d): `DiaryKeys` defines `diarykeeper:is_diary` and `diarykeeper:diary_id`. Either marker blocks **every** EnthusiaSignature sign and track mutation, including automatic stat redraws. The guard does not depend on DiaryKeeper being enabled, the item's material, or operator status.
 - [EnthusiaLoreItems](https://github.com/wsg138/EnthusiaLoreItems/tree/a377453): identity lives under the `enthusialoreitems` namespace. These items can be signed and tracked while retaining their existing lore. EnthusiaSignature preserves their PDC identities, display names, models, enchantments and other metadata.
+
+- Any item carrying the `enthusiasignature:locked` marker (any value) is also refused every sign, track, tracker-removal and automatic counter change, with the `locked-item` message. Other plugins or a give command set it, e.g. `custom_data={PublicBukkitValues:{"enthusiasignature:locked":1b}}`. It is used for one-of-a-kind items such as the Crown of Sorrow.
 
 No changes or commits were made to either repository. Protection is enforced at EnthusiaSignature's mutation boundary; separate plugins retain control of their own commands and canonical item updates.
 
