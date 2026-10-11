@@ -177,6 +177,15 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
   Import evidence: LungeTrackingBridge uses existing net.enthusia.itemsignature.domain.Stat, org.bukkit.GameMode, org.bukkit.entity.Player, org.bukkit.event.EventPriority, org.bukkit.event.Listener, org.bukkit.plugin.java.JavaPlugin and the Cancellable/EntityEvent/EquipmentSlot contracts verified above.
   Validation: lunge-red.log records a native-event counter failure; focused discovery/command gating and full clean verify pass 77 tests including architecture. javap confirms the actual 26.2 build 124 native event binary contract; no live server/client proof is claimed.
 
+- [x] **TDD-015** - Honour a signature lock marker set by other plugins.
+  Tag: TDD
+  References: REQ-032; docs/implementation.md#infrastructure
+  Acceptance: an item with enthusiasignature:locked rejects sign and track with locked-item, automatic counters leave it unchanged, Diary behaviour and message stay as they were.
+  Evidence:
+  - Requested for the one-of-a-kind Crown of Sorrow lore item (2026-10-11). The marker is in a separate namespace so ItemData.validate never treats it as signature data.
+  - Uses the existing PersistentDataContainer.has, NamespacedKey and InputFailure contracts already used by the Diary guard; no new imports.
+  Validation: signature-lock-red.log records the missing rejection before implementation; full clean verify and the EARS validator pass after it.
+
 - [x] **INFRA-002** - Package and document item-specific trackers.
   Tag: INFRA
   References: REQ-027, REQ-028, REQ-029, REQ-030; docs/implementation.md#infrastructure

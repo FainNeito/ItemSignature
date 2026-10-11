@@ -99,3 +99,6 @@ WHEN a runtime supplies Paper's native spear lunge event THE SYSTEM SHALL count 
 
 ### REQ-031 - Halloween glyph installation
 WHEN the supplied Halloween icon bundle is prepared for installation THE SYSTEM SHALL preserve its fifteen textures, validate new glyph IDs, placeholders, characters and asset paths against the supplied current Nexo configuration and generated pack, provide permission-checked signature tokens, and explicitly exclude every new glyph from guild emoji selection.
+
+### REQ-032 - Signature lock marker
+IF an item contains the enthusiasignature:locked marker THEN THE SYSTEM SHALL reject signing, tracker attachment, tracker removal, and automatic tracker mutations with a distinct locked-item message, regardless of operator status.

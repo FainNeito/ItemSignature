@@ -97,6 +97,7 @@ messages:
   invalid-item: '<red>Hold an item in your main hand first.'
   stacked-item: '<red>Hold a single item, not a stack.'
   protected-item: '<red>Diary lore cannot be changed, signed, or tracked.'
+  locked-item: '<red>This item cannot be signed or tracked.'
   text-blacklisted: '<red>Your text contains a restricted word.'
   invalid-text: '<red>Use a single nonempty line of up to %max% characters. Control characters and arbitrary tags are not allowed.'
   glyph-unavailable: '<red>That glyph is unavailable or you lack its Nexo permission.'
