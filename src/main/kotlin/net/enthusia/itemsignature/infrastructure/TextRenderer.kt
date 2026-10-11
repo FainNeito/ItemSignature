@@ -121,9 +121,9 @@ class TextRenderer(private val settings: Settings, private val glyphs: GlyphReso
 
     fun statLine(stat: Stat, value: Long): Component {
         val path = "formats.tracking.stat-names.${stat.id}"
-        val icon = template(settings.yaml.getString("$path.icon", "")!!)
+        val icon = template(settings.yaml.getString("$path.icon") ?: "")
         val effectiveIcon = if (PlainTextComponentSerializer.plainText().serialize(icon).isBlank())
-            Component.text(settings.yaml.getString("$path.fallback-icon", "")!!) else icon
+            Component.text(settings.yaml.getString("$path.fallback-icon") ?: "") else icon
         return template(settings.format("tracking.stat-line"), mapOf(
             "nexo_stat_icon" to effectiveIcon, "stat_name" to Component.text(settings.statName(stat)),
             "stat_value" to Component.text(if (stat.distance) java.math.BigDecimal.valueOf(value, 2).toPlainString() + " m" else value.toString())))

@@ -31,7 +31,7 @@ class Settings(val yaml: YamlConfiguration) {
         }
     }
     fun format(path: String) = yaml.getString("formats.$path") ?: error("Missing format: $path")
-    fun statName(stat: Stat) = yaml.getString("formats.tracking.stat-names.${stat.id}.name", stat.label)!!
+    fun statName(stat: Stat) = yaml.getString("formats.tracking.stat-names.${stat.id}.name") ?: stat.label
 }
 
 class InputFailure(val messageKey: String, val replacements: Map<String, String> = emptyMap()) : RuntimeException(messageKey)

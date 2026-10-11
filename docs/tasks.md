@@ -186,6 +186,15 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
   - Uses the existing PersistentDataContainer.has, NamespacedKey and InputFailure contracts already used by the Diary guard; no new imports.
   Validation: signature-lock-red.log records the missing rejection before implementation; full clean verify and the EARS validator pass after it.
 
+- [x] **TDD-016** - Fall back to packaged defaults for missing messages and tracker labels.
+  Tag: TDD
+  References: REQ-033; docs/implementation.md#infrastructure
+  Acceptance: a config written before locked-item existed shows the packaged sentence, not the key; a config missing a tracker entry still shows its packaged name and fallback icon.
+  Evidence:
+  - Found on SMP Test (2026-10-11): /sign on the Crown of Sorrow replied "locked-item". Bukkit's getString(path, def) returns def without consulting setDefaults, so every getString with an inline default bypassed the packaged config.
+  - Uses the existing YamlConfiguration.getString(path) and setDefaults contracts; no new imports in production code.
+  Validation: message-defaults-red.log records both failures before the change; full clean verify and the EARS validator pass after it.
+
 - [x] **INFRA-002** - Package and document item-specific trackers.
   Tag: INFRA
   References: REQ-027, REQ-028, REQ-029, REQ-030; docs/implementation.md#infrastructure

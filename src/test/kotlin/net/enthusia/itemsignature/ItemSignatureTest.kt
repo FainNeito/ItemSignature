@@ -238,6 +238,32 @@ class ItemSignatureTest {
         assertEquals(170, service.settings.maxLength)
     }
 
+    @Test fun `messages missing from an older config fall back to the packaged text`() {
+        val file = java.io.File(plugin.dataFolder, "config.yml")
+        file.writeText(file.readLines().filterNot { it.trimStart().startsWith("locked-item:") }.joinToString("\n"))
+        server.dispatchCommand(server.consoleSender, "itemsignature reload")
+        val meta = item.itemMeta!!
+        meta.persistentDataContainer.set(NamespacedKey("enthusiasignature", "locked"), Type.BOOLEAN, true)
+        item.itemMeta = meta
+        player.inventory.setItemInMainHand(item)
+        while (player.nextMessage() != null) Unit
+        server.dispatchCommand(player, "sign")
+        assertTrue(player.nextMessage()!!.endsWith("This item cannot be signed or tracked."))
+    }
+
+    @Test fun `tracker names and icons missing from an older config fall back to the packaged ones`() {
+        val packaged = YamlConfiguration.loadConfiguration(java.io.InputStreamReader(plugin.getResource("config.yml")!!, Charsets.UTF_8))
+        val old = YamlConfiguration().apply {
+            loadFromString(service.settings.yaml.saveToString())
+            set("formats.tracking.stat-names.blocks_broken", null)
+            set("formats.tracking.stat-names.blocks_broken.name", null)
+            setDefaults(packaged)
+        }
+        val line = PlainTextComponentSerializer.plainText().serialize(TextRenderer(Settings(old)) { _, _ -> null }.statLine(Stat.BLOCKS_BROKEN, 3))
+        assertTrue(line.contains("Blocks Mined"), line)
+        assertTrue(line.contains("⛏"), line)
+    }
+
     @Test fun `old resign configuration cannot replace a permanent signature`() {
         grant("track.mob_kills")
         seed("Keepsake")

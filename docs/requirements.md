@@ -102,3 +102,6 @@ WHEN the supplied Halloween icon bundle is prepared for installation THE SYSTEM 
 
 ### REQ-032 - Signature lock marker
 IF an item contains the enthusiasignature:locked marker THEN THE SYSTEM SHALL reject signing, tracker attachment, tracker removal, and automatic tracker mutations with a distinct locked-item message, regardless of operator status.
+
+### REQ-033 - Packaged message and label defaults
+WHEN a message, tracker name or tracker icon is absent from an existing configuration THE SYSTEM SHALL use the packaged default text instead of the raw key or an empty value.
