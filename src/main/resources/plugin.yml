@@ -22,6 +22,9 @@ commands:
 permissions:
   itemsignature.sign:
     default: true
+  itemsignature.sign.locked:
+    description: Sign items carrying the enthusiasignature:locked marker (tracking stays blocked)
+    default: false
   itemsignature.color:
     default: false
   itemsignature.hex:

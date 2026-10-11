@@ -19,10 +19,12 @@ class ItemService(val settings: Settings, val renderer: TextRenderer, private va
     fun permission(player: Player, node: String) {
         if (!player.hasPermission("itemsignature.$node")) throw InputFailure("no-permission")
     }
-    private fun meta(item: ItemStack): ItemMeta {
+    /** [lockedAllowed] lets a signing player with itemsignature.sign.locked past the lock marker; nothing else does. */
+    private fun meta(item: ItemStack, lockedAllowed: Boolean = false): ItemMeta {
         if (item.type.isAir || !item.type.isItem) throw InputFailure("invalid-item")
         val meta = item.itemMeta ?: throw InputFailure("invalid-item")
-        when (CustomizationPolicy.rejection(ItemFacts(ItemData.diary(meta), item.amount, ItemData.locked(meta)))) {
+        val locked = ItemData.locked(meta) && !lockedAllowed
+        when (CustomizationPolicy.rejection(ItemFacts(ItemData.diary(meta), item.amount, locked))) {
             MutationRejection.DIARY -> throw InputFailure("protected-item")
             MutationRejection.LOCKED -> throw InputFailure("locked-item")
             MutationRejection.STACK -> throw InputFailure("stacked-item")
@@ -34,7 +36,7 @@ class ItemService(val settings: Settings, val renderer: TextRenderer, private va
 
     fun sign(player: Player, item: ItemStack, args: List<String>) {
         permission(player, "sign")
-        val meta = meta(item)
+        val meta = meta(item, lockedAllowed = player.hasPermission("itemsignature.sign.locked"))
         val oldName = ItemData.string(meta, "signer_name")
         if (oldName != null) throw InputFailure("already-signed", mapOf("player" to oldName))
         var rest = args
