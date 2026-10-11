@@ -24,11 +24,12 @@ class TextRenderer(private val settings: Settings, private val glyphs: GlyphReso
     private val mini = MiniMessage.builder().tags(TagResolver.resolver(
         StandardTags.color(), StandardTags.decorations(TextDecoration.BOLD),
         StandardTags.decorations(TextDecoration.ITALIC), StandardTags.decorations(TextDecoration.UNDERLINED),
-        StandardTags.decorations(TextDecoration.STRIKETHROUGH), StandardTags.reset()
+        StandardTags.decorations(TextDecoration.STRIKETHROUGH), StandardTags.reset(), StandardTags.gradient()
     )).build()
     private val glyphToken = Regex("(?i)%nexo_([a-z0-9_]+)%|<glyph:([a-z0-9_]+)>|:([a-z0-9_]+):")
     private val legacy = Regex("(?i)&#[0-9a-f]{6}|&[0-9a-fk-or]")
     private val tag = Regex("<(/?)([^<>]+)>")
+    private val hex = Regex("#[0-9a-f]{6}")
     private val decorations = setOf("bold", "b", "italic", "i", "em", "underlined", "u", "strikethrough", "st", "reset")
 
     fun user(raw: String, player: Player): Component {
@@ -41,15 +42,28 @@ class TextRenderer(private val settings: Settings, private val glyphs: GlyphReso
         for (match in tag.findAll(withoutGlyphs)) {
             val name = match.groupValues[2].lowercase(Locale.ROOT)
             when {
-                name.startsWith("#") && Regex("#[0-9a-f]{6}").matches(name) -> permission(player, "hex")
-                NamedTextColor.NAMES.value(name) != null || name in decorations -> permission(player, "color")
-                else -> fail("invalid-text")
+                name == "gradient" && match.groupValues[1] == "/" -> Unit
+                name.startsWith("gradient:") && match.groupValues[1].isEmpty() -> gradientStops(name).forEach { colorPermission(it, player) }
+                else -> colorPermission(name, player)
             }
         }
         checkBlacklist(tag.replace(withoutGlyphs, ""))
         val component = render(raw, player, emptyMap())
         checkBlacklist(PlainTextComponentSerializer.plainText().serialize(component))
         return component
+    }
+
+    private fun colorPermission(name: String, player: Player) = when {
+        hex.matches(name) -> permission(player, "hex")
+        NamedTextColor.NAMES.value(name) != null || name in decorations -> permission(player, "color")
+        else -> fail("invalid-text")
+    }
+
+    // 2..8 hex stops only: named stops would collide with :glyph: syntax, and phase arguments are not offered.
+    private fun gradientStops(name: String): List<String> {
+        val stops = name.removePrefix("gradient:").split(':')
+        if (stops.size !in 2..8 || stops.any { !hex.matches(it) }) fail("invalid-text")
+        return stops
     }
 
     private fun checkBlacklist(text: String) {

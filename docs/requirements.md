@@ -108,3 +108,7 @@ WHEN a message, tracker name or tracker icon is absent from an existing configur
 
 ### REQ-034 - Locked-item signing permission
 WHERE a player has the itemsignature.sign.locked permission THE SYSTEM SHALL allow that player to sign an item carrying the enthusiasignature:locked marker, while tracker attachment, removal and automatic counters on that item remain rejected.
+
+### REQ-035 - Gradient signature text
+WHEN a player's signature text contains a MiniMessage gradient with two to eight hex color stops THE SYSTEM SHALL render it as a per-character gradient, require the itemsignature.hex permission, and reject named-color stops, phase arguments and other gradient forms as invalid text.
+  Validation: gradient-text-red.log records the invalid-text rejection before implementation; full clean verify and the EARS validator pass after it.

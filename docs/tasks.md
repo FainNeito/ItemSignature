@@ -203,6 +203,14 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
   - Requested so only Founders can sign the one-of-a-kind Crown of Sorrow (2026-10-11). Uses the existing Player.hasPermission and InputFailure contracts; no new imports.
   Validation: locked-sign-red.log records the rejection before implementation; full clean verify and the EARS validator pass after it.
 
+- [x] **TDD-018** - Allow hex gradients in signature text.
+  Tag: TDD
+  References: REQ-035; docs/implementation.md#infrastructure
+  Acceptance: `/sign --color #82bae6 <b><gradient:#c1ddf3:#82bae6>Everlights` previews and signs with per-character colors for a player with hex and quote; without hex it returns no-permission; named stops, phase arguments, fewer than two or more than eight stops return invalid-text.
+  Evidence:
+  - Player bug report "Support gradients for /sign --color" (2026-10-11). Uses Adventure's StandardTags.gradient(); named stops are excluded because `:red:` collides with the colon glyph syntax.
+  Validation: gradient-text-red.log records the rejection before implementation; full clean verify (88 tests) and the EARS validator pass after it.
+
 - [x] **INFRA-002** - Package and document item-specific trackers.
   Tag: INFRA
   References: REQ-027, REQ-028, REQ-029, REQ-030; docs/implementation.md#infrastructure
