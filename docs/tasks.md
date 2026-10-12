@@ -234,3 +234,11 @@ REQ-001 through REQ-012 are implemented before SPEAR adoption. Baseline: 33 pass
   Routing: INFRA; no plugin behavior is changed, so behavioral prove/engine phases do not apply. Real negative collision exercises and full existing plugin verification remain required.
 
   Validation: 77 existing Maven tests pass (0 failures/errors/skips); 9 synthetic importer checks pass; EARS and git diff whitespace checks pass. Fresh production snapshot produces 15 byte-identical textures, preserves 1043 non-font entries and all existing font providers. Installed ItemSignature 1.1.0 bytecode confirms token syntax and Nexo permission checks; installed LumaGuilds 3.0.20 confirms non-emoji rejection, and Nexo 1.28 reads explicit is_emoji false. Source is prepared for review; no production write, regeneration or client acceptance is claimed.
+
+- [x] **TDD-019** - Persist missing defaults and migrate exact stock help safely.
+  Tag: TDD
+  References: REQ-036; docs/implementation.md#infrastructure
+  Evidence: ItemSignaturePlugin.loadSettings; Settings validation; org.bukkit.configuration.file.YamlConfiguration; org.junit.jupiter.api.Assertions and Test; org.mockbukkit.mockbukkit.MockBukkit; java.io.File; java.nio.file.Files and StandardCopyOption; stock messages from config.yml and git history.
+  Acceptance: reload writes absent defaults without replacing explicit false/empty/custom values; obsolete stock help is refreshed, custom messages survive, repeated reload is byte-stable, invalid reload preserves file and active service.
+
+  Validation: ConfigUpdateTest reproduced two behavioral failures before implementation (missing persisted default, overwritten custom help). Focused tests then passed; full Maven clean verify passed 90 tests with zero failures/errors/skips. Legacy startup now preserves the original source config while materializing defaults in the current copy. EARS and layer checks pass. No production configuration/JAR changes or restart performed for this source task.

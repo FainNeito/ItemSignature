@@ -73,11 +73,9 @@ open class ItemSignaturePlugin : JavaPlugin() {
         val defaults = getResource("config.yml")!!.use { stream ->
             InputStreamReader(stream, Charsets.UTF_8).use(YamlConfiguration::loadConfiguration)
         }
-        yaml.setDefaults(defaults)
-        // Old generated help advertised the removed command; other customized messages stay intact.
-        if (yaml.getString("messages.help", "")!!.contains("/lore")) yaml.set("messages.help", defaults.getString("messages.help"))
-        if (yaml.getString("messages.sign-usage", "")!!.contains("&a")) yaml.set("messages.sign-usage", defaults.getString("messages.sign-usage"))
+        val changed = ConfigUpdates.merge(yaml, defaults)
         val settings = Settings(yaml)
+        if (changed) ConfigUpdates.save(File(dataFolder, "config.yml"), yaml)
         service = ItemService(settings, TextRenderer(settings, NexoBridge(this)))
         pending.clear()
     }

@@ -56,3 +56,6 @@ DistanceTrackingListener counts eligible coordinates on worn FEET/CHEST slots, e
 
 ## Halloween glyph assets
 The offline tools/resourcepack/prepare_halloween.py importer consumes the purchased bundle and fresh Nexo snapshots, rejects collisions and creates an additive install ZIP. Explicit U+E600 through U+E60E assignments are stable and checked against all supplied font/glyph characters. Existing Nexo glyph resolution supplies signatures; is_emoji false excludes these glyphs from LumaGuilds. No domain/application/runtime code, tracker defaults, item models or guild data change. Licensed texture bytes remain outside source control.
+
+## Automatic config updates
+ConfigUpdates is an infrastructure adapter. Startup/reload materializes absent leaf defaults while retaining explicit false/empty values, custom keys and scalar parents. Only exact historical stock help and invalid-stat messages are replaced. Settings validation occurs before persistence or service publication. Changed config is backed up to config.yml.bak and atomically replaced from a staged file; failed validation/write retains the active service, and unchanged reloads do not rewrite the file.

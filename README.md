@@ -164,3 +164,5 @@ Remove the old ItemSignature JAR and install `EnthusiaSignature-1.1.1.jar`. Keep
 
 ## Halloween signature icons
 See [the Halloween Nexo integration](resourcepack/halloween/README.md) for the fifteen icons, collision-checked preparation, permissions and signature examples. These glyphs are excluded from guild emoji selection; no plugin upgrade is required.
+
+Configuration updates: startup and `/esign reload` persist missing packaged settings and refresh recognized obsolete stock tracker help. Explicit custom settings/messages stay intact. Updates validate before writing and back up the prior config as `config.yml.bak`; unchanged reloads do not rewrite files. The legacy `ItemSignature/config.yml` remains untouched.
