@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import org.mockbukkit.mockbukkit.MockBukkit
+import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -112,7 +113,10 @@ class EnthusiaSignatureBrandingTest {
             Files.writeString(legacy, "settings:\n  signing:\n    max-text-length: 73\n")
             val plugin = MockBukkit.load(ItemSignaturePlugin::class.java)
             assertEquals(73, plugin.service.settings.maxLength)
-            assertEquals(Files.readString(legacy), Files.readString(plugin.dataFolder.toPath().resolve("config.yml")))
+            assertEquals("settings:\n  signing:\n    max-text-length: 73\n", Files.readString(legacy))
+            val updated = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(File(plugin.dataFolder, "config.yml"))
+            assertEquals(73, updated.getInt("settings.signing.max-text-length"))
+            assertTrue(updated.contains("settings.tracking.allow-removal", true))
         } finally {
             MockBukkit.unmock()
         }

@@ -112,3 +112,6 @@ WHERE a player has the itemsignature.sign.locked permission THE SYSTEM SHALL all
 ### REQ-035 - Gradient signature text
 WHEN a player's signature text contains a MiniMessage gradient with two to eight hex color stops THE SYSTEM SHALL render it as a per-character gradient, require the itemsignature.hex permission, and reject named-color stops, phase arguments and other gradient forms as invalid text.
   Validation: gradient-text-red.log records the invalid-text rejection before implementation; full clean verify and the EARS validator pass after it.
+
+### REQ-036 - Preserve custom configuration during automatic updates
+WHEN configuration is loaded on startup or reload THE SYSTEM SHALL persist missing packaged defaults and replace only recognized obsolete stock tracker help, preserve custom values and messages, and leave invalid configuration and the active service unchanged after a rejected reload.
