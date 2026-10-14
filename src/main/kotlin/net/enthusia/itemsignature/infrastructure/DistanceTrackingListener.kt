@@ -34,6 +34,7 @@ class DistanceTrackingListener(private val service: () -> ItemService) : Listene
             slot = EquipmentSlot.FEET
             meters = kotlin.math.sqrt(dx * dx + dz * dz)
         }
+        if (!meters.isFinite() || meters <= 0) return
         try {
             val item = player.inventory.getItem(slot)
             if (service().incrementDistance(item, stat, meters)) player.inventory.setItem(slot, item)
