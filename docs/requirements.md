@@ -115,3 +115,8 @@ WHEN a player's signature text contains a MiniMessage gradient with two to eight
 
 ### REQ-036 - Preserve custom configuration during automatic updates
 WHEN configuration is loaded on startup or reload THE SYSTEM SHALL persist missing packaged defaults and replace only recognized obsolete stock tracker help, preserve custom values and messages, and leave invalid configuration and the active service unchanged after a rejected reload.
+
+### REQ-037 - Bounded tracker hot-path work
+WHEN a tracked action updates an item THE SYSTEM SHALL use at most one ItemMeta snapshot, reuse bounded immutable decoded signature and editable-lore snapshots, persist counters and fractional distance immediately, and preserve ownership, protection, validation, external lore and real-time rendering semantics.
+
+IF a movement event adds no eligible distance THEN THE SYSTEM SHALL avoid reading the equipped item metadata.

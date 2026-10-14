@@ -25,8 +25,11 @@ object ItemData {
     fun set(meta: ItemMeta, name: String, value: String) = meta.persistentDataContainer.set(key(name), Type.STRING, value)
     fun set(meta: ItemMeta, name: String, value: Long) = meta.persistentDataContainer.set(key(name), Type.LONG, value)
     fun set(meta: ItemMeta, name: String, value: Double) = meta.persistentDataContainer.set(key(name), Type.DOUBLE, value)
+    private val stableLore = StableLoreCache { it.split('\n').map(json::deserialize) }
     fun lines(meta: ItemMeta, name: String): List<Component> = read {
-        string(meta, name)?.takeIf { it.isNotEmpty() }?.split('\n')?.map(json::deserialize) ?: emptyList()
+        val encoded = string(meta, name)?.takeIf { it.isNotEmpty() } ?: return@read emptyList()
+        if (name == "signature" || name == "editable") stableLore.read(encoded)
+        else encoded.split('\n').map(json::deserialize)
     }
     fun setLines(meta: ItemMeta, name: String, lines: List<Component>) = set(meta, name, lines.joinToString("\n", transform = json::serialize))
 

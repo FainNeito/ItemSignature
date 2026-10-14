@@ -1,0 +1,5 @@
+Before implementation, TrackerPerformanceTest: 3 tests, 3 failures, 0 errors.
+Counter snapshot verification: Wanted 100 times; But was 200 times.
+Stable decoded lore: assertSame failed (two independently allocated decoded lists).
+Rotation-only equipment: NeverWantedButInvoked, DistanceTrackingListener.onMove.
+Captured in esign-performance-red.log, October 13, 2026.

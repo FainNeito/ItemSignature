@@ -20,9 +20,9 @@ class ItemService(val settings: Settings, val renderer: TextRenderer, private va
         if (!player.hasPermission("itemsignature.$node")) throw InputFailure("no-permission")
     }
     /** [lockedAllowed] lets a signing player with itemsignature.sign.locked past the lock marker; nothing else does. */
-    private fun meta(item: ItemStack, lockedAllowed: Boolean = false): ItemMeta {
+    private fun meta(item: ItemStack, lockedAllowed: Boolean = false, snapshot: ItemMeta? = null): ItemMeta {
         if (item.type.isAir || !item.type.isItem) throw InputFailure("invalid-item")
-        val meta = item.itemMeta ?: throw InputFailure("invalid-item")
+        val meta = snapshot ?: item.itemMeta ?: throw InputFailure("invalid-item")
         val locked = ItemData.locked(meta) && !lockedAllowed
         when (CustomizationPolicy.rejection(ItemFacts(ItemData.diary(meta), item.amount, locked))) {
             MutationRejection.DIARY -> throw InputFailure("protected-item")
@@ -97,7 +97,7 @@ class ItemService(val settings: Settings, val renderer: TextRenderer, private va
         if (item.type.isAir || !item.hasItemMeta()) return false
         val raw = item.itemMeta ?: return false
         if (ItemData.protected(raw) || item.amount != 1 || ItemData.string(raw, "stat") != stat.id) return false
-        val meta = meta(item)
+        val meta = meta(item, snapshot = raw)
         val value = ItemData.number(meta, "value") ?: throw InputFailure("data-error")
         val nextValue = CustomizationPolicy.nextCounter(value)
         if (nextValue == value) return false
@@ -112,7 +112,7 @@ class ItemService(val settings: Settings, val renderer: TextRenderer, private va
         if (!stat.distance || !meters.isFinite() || meters <= 0 || !stat.accepts(item.type.name) || !item.hasItemMeta()) return false
         val raw = item.itemMeta ?: return false
         if (ItemData.protected(raw) || item.amount != 1 || ItemData.string(raw, "stat") != stat.id) return false
-        val meta = meta(item)
+        val meta = meta(item, snapshot = raw)
         val previous = ItemData.number(meta, "value") ?: throw InputFailure("data-error")
         if (previous == Long.MAX_VALUE) return false
         val centimeters = meters * 100 + (ItemData.decimal(meta, "distance_remainder") ?: 0.0)
